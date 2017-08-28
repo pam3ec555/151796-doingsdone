@@ -102,10 +102,10 @@ $tasks = [
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
                         <?php foreach ($projects as $key => $value): ?>
-                        <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link <?php if ($key == 0): ?>main-navigation__list-item--active<?php endif; ?>" href="#"><?=$value; ?></a>
-                            <span class="main-navigation__list-item-count"></span>
-                        </li>
+                            <li class="main-navigation__list-item">
+                                <a class="main-navigation__list-item-link <?php if ($key == 0): ?>main-navigation__list-item--active<?php endif; ?>" href="#"><?=$value; ?></a>
+                                <span class="main-navigation__list-item-count"></span>
+                            </li>
                         <?php endforeach; ?>
 
                     </ul>
@@ -156,17 +156,17 @@ $tasks = [
                 <table class="tasks">
                     <?php foreach ($tasks as $key => $value): ?>
 
-                    <tr class="tasks__item <?php if ($value['is_complete'] == true): ?>task--completed<?php endif; ?>">
-                        <td class="task__select">
-                            <label class="checkbox task__checkbox">
-                                <input class="checkbox__input visually-hidden" type="checkbox" checked>
-                                <span class="checkbox__text"><?=$value['task']; ?></span>
-                            </label>
-                        </td>
-                        <td class="task__date"><?=$value['date_of_complete'] ?></td>
+                        <tr class="tasks__item <?php if ($value['is_complete'] == true): ?>task--completed<?php endif; ?>">
+                            <td class="task__select">
+                                <label class="checkbox task__checkbox">
+                                    <input class="checkbox__input visually-hidden" type="checkbox" checked>
+                                    <span class="checkbox__text"><?=$value['task']; ?></span>
+                                </label>
+                            </td>
+                            <td class="task__date"><?=$value['date_of_complete'] ?></td>
 
-                        <td class="task__controls"></td>
-                    </tr>
+                            <td class="task__controls"></td>
+                        </tr>
                     <?php endforeach; ?>
 
                 </table>
