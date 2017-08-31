@@ -58,25 +58,6 @@ $tasks = [
     ]
 ];
 
-/**
- * @param $tasks // массив с задачами
- * @param $name_of_project // имя проекта
- * @return int // кол-во проектов определенного типа
- */
-function setProjectsCount($tasks, $name_of_project) {
-    $count = 0;
-
-    if ($name_of_project == "Все") {
-        $count = count($tasks);
-    } else {
-        foreach ($tasks as $key => $value) {
-            if ($value['category'] == $name_of_project)
-                $count++;
-        }
-    }
-
-    return $count;
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,105 +73,106 @@ function setProjectsCount($tasks, $name_of_project) {
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
-  <div class="container container--with-sidebar">
-    <header class="main-header">
-      <a href="#">
-        <img src="img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
-      </a>
 
-      <div class="main-header__side">
-        <a class="main-header__side-item button button--plus" href="#">Добавить задачу</a>
+    <div class="container container--with-sidebar">
+        <header class="main-header">
+            <a href="#">
+                <img src="img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
+            </a>
 
-        <div class="main-header__side-item user-menu">
-          <div class="user-menu__image">
-            <img src="img/user-pic.jpg" width="40" height="40" alt="Пользователь">
-          </div>
+            <div class="main-header__side">
+                <a class="main-header__side-item button button--plus" href="#">Добавить задачу</a>
 
-          <div class="user-menu__data">
-            <p>Константин</p>
+                <div class="main-header__side-item user-menu">
+                    <div class="user-menu__image">
+                        <img src="img/user-pic.jpg" width="40" height="40" alt="Пользователь">
+                    </div>
 
-            <a href="#">Выйти</a>
-          </div>
-        </div>
-      </div>
-    </header>
+                    <div class="user-menu__data">
+                        <p>Константин</p>
 
-    <div class="content">
-      <section class="content__side">
-        <h2 class="content__side-heading">Проекты</h2>
+                        <a href="#">Выйти</a>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-        <nav class="main-navigation">
-          <ul class="main-navigation__list">
-              <?php foreach ($projects as $key => $value): ?>
-                <li class="main-navigation__list-item">
-                  <a class="main-navigation__list-item-link <?php if ($key == 0): ?>main-navigation__list-item--active<?php endif; ?>" href="#"><?=$value; ?></a>
-                  <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value)) ?></span>
-                </li>
-              <?php endforeach; ?>
+        <div class="content">
+            <section class="content__side">
+                <h2 class="content__side-heading">Проекты</h2>
 
-          </ul>
-        </nav>
+                <nav class="main-navigation">
+                    <ul class="main-navigation__list">
+                        <?php foreach ($projects as $key => $value): ?>
+                            <li class="main-navigation__list-item">
+                                <a class="main-navigation__list-item-link <?php if ($key == 0): ?>main-navigation__list-item--active<?php endif; ?>" href="#"><?=$value; ?></a>
+                                <span class="main-navigation__list-item-count"></span>
+                            </li>
+                        <?php endforeach; ?>
 
-        <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
-      </section>
+                    </ul>
+                </nav>
 
-      <main class="content__main">
-        <h2 class="content__main-heading">Список задач</h2>
+                <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
+            </section>
 
-        <form class="search-form" action="index.php" method="post">
-          <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
+            <main class="content__main">
+                <h2 class="content__main-heading">Список задач</h2>
 
-          <input class="search-form__submit" type="submit" name="" value="Искать">
-        </form>
+                <form class="search-form" action="index.php" method="post">
+                    <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
 
-        <div class="tasks-controls">
-          <div class="radio-button-group">
-            <label class="radio-button">
-              <input class="radio-button__input visually-hidden" type="radio" name="radio" checked="">
-              <span class="radio-button__text">Все задачи</span>
-            </label>
+                    <input class="search-form__submit" type="submit" name="" value="Искать">
+                </form>
 
-            <label class="radio-button">
-              <input class="radio-button__input visually-hidden" type="radio" name="radio">
-              <span class="radio-button__text">Повестка дня</span>
-            </label>
+                <div class="tasks-controls">
+                    <div class="radio-button-group">
+                        <label class="radio-button">
+                            <input class="radio-button__input visually-hidden" type="radio" name="radio" checked="">
+                            <span class="radio-button__text">Все задачи</span>
+                        </label>
 
-            <label class="radio-button">
-              <input class="radio-button__input visually-hidden" type="radio" name="radio">
-              <span class="radio-button__text">Завтра</span>
-            </label>
+                        <label class="radio-button">
+                            <input class="radio-button__input visually-hidden" type="radio" name="radio">
+                            <span class="radio-button__text">Повестка дня</span>
+                        </label>
 
-            <label class="radio-button">
-              <input class="radio-button__input visually-hidden" type="radio" name="radio">
-              <span class="radio-button__text">Просроченные</span>
-            </label>
-          </div>
+                        <label class="radio-button">
+                            <input class="radio-button__input visually-hidden" type="radio" name="radio">
+                            <span class="radio-button__text">Завтра</span>
+                        </label>
 
-          <label class="checkbox">
-            <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
-            <input id="show-complete-tasks" class="checkbox__input visually-hidden" type="checkbox">
-            <span class="checkbox__text">Показывать выполненные</span>
-          </label>
-        </div>
+                        <label class="radio-button">
+                            <input class="radio-button__input visually-hidden" type="radio" name="radio">
+                            <span class="radio-button__text">Просроченные</span>
+                        </label>
+                    </div>
 
-        <table class="tasks">
-            <?php foreach ($tasks as $key => $value): ?>
+                    <label class="checkbox">
+                        <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
+                        <input id="show-complete-tasks" class="checkbox__input visually-hidden" type="checkbox">
+                        <span class="checkbox__text">Показывать выполненные</span>
+                    </label>
+                </div>
 
-              <tr class="tasks__item <?php if ($value['is_complete'] == true): ?>task--completed<?php endif; ?>">
-                <td class="task__select">
-                  <label class="checkbox task__checkbox">
-                    <input class="checkbox__input visually-hidden" type="checkbox" checked>
-                    <span class="checkbox__text"><?=$value['task']; ?></span>
-                  </label>
-                </td>
-                <td class="task__date"><?=$value['date_of_complete'] ?></td>
+                <table class="tasks">
+                    <?php foreach ($tasks as $key => $value): ?>
 
-                <td class="task__controls"></td>
-              </tr>
-            <?php endforeach; ?>
+                        <tr class="tasks__item <?php if ($value['is_complete'] == true): ?>task--completed<?php endif; ?>">
+                            <td class="task__select">
+                                <label class="checkbox task__checkbox">
+                                    <input class="checkbox__input visually-hidden" type="checkbox" checked>
+                                    <span class="checkbox__text"><?=$value['task']; ?></span>
+                                </label>
+                            </td>
+                            <td class="task__date"><?=$value['date_of_complete'] ?></td>
 
-        </table>
-      </main>
+                            <td class="task__controls"></td>
+                        </tr>
+                    <?php endforeach; ?>
+
+                </table>
+            </main>
     </div>
   </div>
 </div>
