@@ -6,6 +6,7 @@ renderTemplate(
     'templates/layout.php',
     [
         'projects' => $projects,
-        'tasks' => $tasks
+        'tasks' => $tasks,
+        'title' => $title
     ]
 );
