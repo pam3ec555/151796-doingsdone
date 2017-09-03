@@ -46,11 +46,10 @@
                     <ul class="main-navigation__list">
                         <?php foreach ($projects as $key => $value): ?>
                             <li class="main-navigation__list-item">
-                                <a class="main-navigation__list-item-link <?php if ($key == 0): ?>main-navigation__list-item--active<?php endif; ?>" href="#"><?=$value; ?></a>
-                                <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value)) ?></span>
+                                <a class="main-navigation__list-item-link <?php if ($key == $tab): ?>main-navigation__list-item--active<?php endif; ?>" href="<?=$value['link'] . "?tab=" . $value['tab']; ?>"><?=$value['name']; ?></a>
+                                <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value['name'])) ?></span>
                             </li>
                         <?php endforeach; ?>
-
                     </ul>
                 </nav>
 
@@ -58,7 +57,13 @@
             </section>
 
             <main class="content__main">
-                <?=renderTemplate('templates/index.php', ['tasks' => $tasks]) ?>
+                <?=renderTemplate('templates/index.php',
+                    [
+                        'tasks' => $tasks,
+                        'projects' => $projects,
+                        'tab' => $tab
+                    ]);
+                ?>
             </main>
         </div>
     </div>

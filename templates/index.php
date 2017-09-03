@@ -1,3 +1,9 @@
+<?php
+
+
+
+?>
+
 <h2 class="content__main-heading">Список задач</h2>
 
 <form class="search-form" action="index.php" method="post">
@@ -38,7 +44,7 @@
 
 <table class="tasks">
     <?php foreach ($tasks as $key => $value): ?>
-
+        <?php if ($value['category'] == $projects[$tab]['name'] || $tab == 0): ?>
         <tr class="tasks__item <?php if ($value['is_complete'] == true): ?>task--completed<?php endif; ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
@@ -50,6 +56,7 @@
 
             <td class="task__controls"></td>
         </tr>
+        <?php endif; ?>
     <?php endforeach; ?>
 
 </table>

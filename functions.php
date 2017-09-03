@@ -19,7 +19,40 @@ $days_until_deadline = floor(($task_deadline_ts - $current_ts) / $SECONDS_PER_DA
 $title = "Главная";
 
 // массив с проектами
-$projects = ["Все", "Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
+//$projects = ["Все", "Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
+$projects = [
+    [
+        "name" => "Все",
+        "link" => "/index.php",
+        "tab" => "0"
+    ],
+    [
+        "name" => "Входящие",
+        "link" => "/index.php",
+        "tab" => "1"
+    ],
+    [
+        "name" => "Учеба",
+        "link" => "/index.php",
+        "tab" => "2"
+    ],
+    [
+        "name" => "Работа",
+        "link" => "/index.php",
+        "tab" => "3"
+    ],
+    [
+        "name" => "Домашние дела",
+        "link" => "/index.php",
+        "tab" => "4"
+    ],
+    [
+        "name" => "Авто",
+        "link" => "/index.php",
+        "tab" => "5"
+    ]
+];
+
 
 // двумерный массив с задачами
 $tasks = [
