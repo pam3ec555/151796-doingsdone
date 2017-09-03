@@ -4,12 +4,12 @@
 $show_complete_tasks = rand(0, 1);
 
 // устанавливаем часовой пояс в Московское время
-date_default_timezone_set('Europe/Moscow');
+date_default_timezone_set("Europe/Moscow");
 
 $SECONDS_PER_DAY = 86400;
 $days = rand(-3, 3);
 $task_deadline_ts = strtotime("+" . $days . " day midnight"); // метка времени даты выполнения задачи
-$current_ts = strtotime('now midnight'); // текущая метка времени
+$current_ts = strtotime("now midnight"); // текущая метка времени
 
 // запишите сюда дату выполнения задачи в формате дд.мм.гггг
 $date_deadline = date("d.m.Y", $task_deadline_ts);
@@ -110,7 +110,7 @@ function setProjectsCount($tasks, $name_of_project) {
     } else {
         // Перебираем массив и находим кол-во проектов определенной категории
         foreach ($tasks as $key => $value) {
-            if ($value['category'] == $name_of_project)
+            if ($value["category"] == $name_of_project)
                 $count++;
         }
     }
@@ -131,7 +131,7 @@ function renderTemplate($template_url, $data = false) {
     }
 
     // Буферизация вывода с сжатием
-    ob_start('ob_gzhandler');
+    ob_start("ob_gzhandler");
 
     // Проверка на существование данных
     if ($data) {

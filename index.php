@@ -1,14 +1,14 @@
 <?php
 
-require_once ('functions.php');
+require_once ("functions.php");
 
 // проверка на параметр запроса
-if (isset($_GET['tab'])) {
-    $tab = $_GET['tab'];
+if (isset($_GET["tab"])) {
+    $tab = $_GET["tab"];
     $is_tab = false;
 
     foreach ($projects as $key => $value) {
-        if ($value['tab'] == $tab) {
+        if ($value["tab"] == $tab) {
             $is_tab = true;
             break;
         }
@@ -24,11 +24,11 @@ if (isset($_GET['tab'])) {
 //if ($tab <)
 
 renderTemplate(
-    'templates/layout.php',
+    "templates/layout.php",
     [
-        'projects' => $projects,
-        'tasks' => $tasks,
-        'title' => $title,
-        'tab' => $tab
+        "projects" => $projects,
+        "tasks" => $tasks,
+        "title" => $title,
+        "tab" => $tab
     ]
 );
