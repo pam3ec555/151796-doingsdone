@@ -145,3 +145,18 @@ function renderTemplate($template_url, $data = false) {
     // Сброс буфера вывода
     ob_get_flush();
 }
+
+/**
+ * Метод проверяющий валидацию поля `дата`
+ * @param $value
+ * @return bool
+ */
+function validateDate($value) {
+    $date = explode("/", $value);
+
+    if (count($date) == 3) {
+        list($day, $month, $year) = $date;
+
+        return checkdate($month, $day, $year);
+    }
+}
