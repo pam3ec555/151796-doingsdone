@@ -23,33 +23,27 @@ $title = "Главная";
 $projects = [
     [
         "name" => "Все",
-        "link" => "index.php",
-        "inset" => "0"
+        "link" => "index.php"
     ],
     [
         "name" => "Входящие",
-        "link" => "index.php",
-        "inset" => "1"
+        "link" => "index.php"
     ],
     [
         "name" => "Учеба",
-        "link" => "index.php",
-        "inset" => "2"
+        "link" => "index.php"
     ],
     [
         "name" => "Работа",
-        "link" => "index.php",
-        "inset" => "3"
+        "link" => "index.php"
     ],
     [
         "name" => "Домашние дела",
-        "link" => "index.php",
-        "inset" => "4"
+        "link" => "index.php"
     ],
     [
         "name" => "Авто",
-        "link" => "index.php",
-        "inset" => "5"
+        "link" => "index.php"
     ]
 ];
 
