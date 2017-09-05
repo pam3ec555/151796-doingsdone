@@ -52,7 +52,7 @@ $rules = ["date" => "validateDate"];
 $errors = [];
 
 // валидация формы добавления задачи
-if ($_SERVER["REQUEST_METHOD"] == "post") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     foreach ($_POST as $key => $value) {
         // если поле обязательное для заполнения и оно пустое

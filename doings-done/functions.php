@@ -176,6 +176,7 @@ function getDateDay($value) {
             $value = date("d/m/Y", strtotime("Saturday"));
             break;
     }
+    print $value;
     return $value;
 }
 
