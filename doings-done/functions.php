@@ -146,17 +146,79 @@ function renderTemplate($template_url, $data = false) {
     ob_get_flush();
 }
 
-/**
- * Метод проверяющий валидацию поля `дата`
- * @param $value
- * @return bool
- */
-function validateDate($value) {
-    $date = explode("/", $value);
-
-    if (count($date) == 3) {
-        list($day, $month, $year) = $date;
-
-        return checkdate($month, $day, $year);
+function getDateDay($value) {
+    switch ($value) {
+        case "сегодня":
+            $value = date("d/m/Y");
+            break;
+        case "завтра":
+            $value = date("d/m/Y", strtotime("+1 day"));
+            break;
+        case "воскресение" || "вс":
+            $value = date("d/m/Y", strtotime("Sunday"));
+            break;
+        case "понедельник" || "пн":
+            $value = date("d/m/Y", strtotime("Monday"));
+            break;
+        case "вторник" || "вт":
+            $value = date("d/m/Y", strtotime("Tuesday"));
+            break;
+        case "среда" || "ср":
+            $value = date("d/m/Y", strtotime("Wednesday"));
+            break;
+        case "четверг" || "чт":
+            $value = date("d/m/Y", strtotime("Thursday"));
+            break;
+        case "пятница" || "пт":
+            $value = date("d/m/Y", strtotime("Friday"));
+            break;
+        case "суббота" || "сб":
+            $value = date("d/m/Y", strtotime("Saturday"));
+            break;
     }
+    return $value;
 }
+
+function getDateFormat($value) {
+    // формат по умолчанию
+    $format = "d/m/Y";
+
+    switch ($value) {
+        case strpos($value, "/"):
+            $format = "d/m/Y";
+            break;
+        case strpos($value, "."):
+            $format = "d.m.Y";
+            break;
+        case strpos($value, "-"):
+            $format = "d-m-Y";
+            break;
+    }
+    return $format;
+}
+
+function getDateTimeFormat($value) {
+    // убираю внешние пробелы
+    $value = trim($value);
+    // приравниваю строку к нижнему регистру
+    $value = mb_strtolower($value);
+    // убираю лишние пробелы и избавляюсь от 'в', так как пользователь может его ввести
+    $value = preg_replace(["/  +/", "/ в /"]," ", $value);
+    // разбиваю строку на пробелы
+    $value = explode(" ", $value);
+
+    if (count($value) === 2) {
+        $format = getDateFormat(getDateDay($value))." "."h/i";
+    } else if (count($value) === 1){
+        $format = getDateFormat(getDateDay($value));
+    }
+
+    return $format;
+}
+
+function validateDate($value, $format) {
+    $date = DateTime::createFromFormat($format, $value);
+    return $date && $date -> format($format) == $value;
+}
+
+validateDate(getDateDay($value), getDateTimeFormat($value));

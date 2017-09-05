@@ -24,7 +24,13 @@ if (isset($_GET["tab"])) {
 }
 
 // переменная проверяющая, есть ли параметр `add`
-$add_task = isset($_GET["add"]) ? true : false;
+//$add_task = isset($_GET["add"]) ? true : false;
+
+if (isset($_GET["add"])) {
+    $add_task = true;
+} else {
+    $add_task = false;
+}
 
 // имя задачи, отправленной на сервер
 $task_name = $_POST["task-name"] ?? "";
@@ -68,9 +74,9 @@ if ($_SERVER["REQUEST_METHOD"] == "post") {
 }
 
 // если нет ошибок
-if (!count($errors)) {
-    header("Location: index.php");
-}
+//if (!count($errors)) {
+//    header("Location: index.php");
+//}
 
 
 
