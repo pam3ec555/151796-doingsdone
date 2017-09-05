@@ -176,7 +176,8 @@ function getDateDay($value) {
             $value = date("d/m/Y", strtotime("Saturday"));
             break;
     }
-    print $value;
+//    /usr/lib/php/20160303/xdebug.so
+
     return $value;
 }
 
@@ -202,16 +203,16 @@ function getDateTimeFormat($value) {
     // убираю внешние пробелы
     $value = trim($value);
     // приравниваю строку к нижнему регистру
-    $value = mb_strtolower($value);
+    $value = strtolower($value);
     // убираю лишние пробелы и избавляюсь от 'в', так как пользователь может его ввести
     $value = preg_replace(["/  +/", "/ в /"]," ", $value);
     // разбиваю строку на пробелы
     $value = explode(" ", $value);
 
     if (count($value) === 2) {
-        $format = getDateFormat(getDateDay($value))." "."h/i";
+        $format = getDateFormat(getDateDay($value[0]))." "."h/i";
     } else if (count($value) === 1){
-        $format = getDateFormat(getDateDay($value));
+        $format = getDateFormat(getDateDay($value[0]));
     }
 
     return $format;

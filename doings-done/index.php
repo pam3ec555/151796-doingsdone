@@ -47,9 +47,10 @@ $task_file = $_POST["task-file"] ?? "";
 // массив обязательных для заполнения полей
 $required = ["name", "project", "date"];
 // массив требований для правильности заполнений
-$rules = ["date" => "validateDate"];
+$rules = ["date"];
 // массив ошибочных полей при отправки пользователем формы
 $errors = [];
+
 
 // валидация формы добавления задачи
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -63,12 +64,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // если поле требует проверки на правильность заполнения
         if  (in_array($key, $rules)) {
-            $result = validateDate(getDateDay($value), getDateTimeFormat($value));
+            $date_value = getDateDay($value);
+            $date_format = getDateTimeFormat($value);
+
+            $result = validateDate($date_value, $date_format);
 
             // если поле заполнено правильно
-            if (!$result) {
-                $errors[] = $key;
-            }
+//            if (!$result) {
+//                $errors[] = $key;
+//            }
         }
     }
 }
