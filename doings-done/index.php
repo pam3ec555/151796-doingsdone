@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "post") {
 
         // если поле требует проверки на правильность заполнения
         if  (in_array($key, $rules)) {
-            $result = validateDate($value);
+            $result = validateDate(getDateDay($value), getDateTimeFormat($value));
 
             // если поле заполнено правильно
             if (!$result) {

@@ -220,5 +220,3 @@ function validateDate($value, $format) {
     $date = DateTime::createFromFormat($format, $value);
     return $date && $date -> format($format) == $value;
 }
-
-validateDate(getDateDay($value), getDateTimeFormat($value));
