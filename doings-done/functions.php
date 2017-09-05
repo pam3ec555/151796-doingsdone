@@ -24,32 +24,32 @@ $projects = [
     [
         "name" => "Все",
         "link" => "index.php",
-        "index" => "0"
+        "inset" => "0"
     ],
     [
         "name" => "Входящие",
         "link" => "index.php",
-        "index" => "1"
+        "inset" => "1"
     ],
     [
         "name" => "Учеба",
         "link" => "index.php",
-        "index" => "2"
+        "inset" => "2"
     ],
     [
         "name" => "Работа",
         "link" => "index.php",
-        "index" => "3"
+        "inset" => "3"
     ],
     [
         "name" => "Домашние дела",
         "link" => "index.php",
-        "index" => "4"
+        "inset" => "4"
     ],
     [
         "name" => "Авто",
         "link" => "index.php",
-        "index" => "5"
+        "inset" => "5"
     ]
 ];
 
