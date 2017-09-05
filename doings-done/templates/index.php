@@ -44,7 +44,7 @@
 
 <table class="tasks">
     <?php foreach ($tasks as $key => $value): ?>
-        <?php if ($value["category"] == $projects[$tab]["name"] || $tab == 0): ?>
+        <?php if ($value["category"] === $project_name && $project_name !== null || $project_name === null): ?>
         <tr class="tasks__item <?php if ($value["is_complete"] == true): ?>task--completed<?php endif; ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
