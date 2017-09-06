@@ -39,20 +39,16 @@
             <section class="content__side">
                 <h2 class="content__side-heading">Проекты</h2>
 
-                <nav class="main-navigation">
-                    <ul class="main-navigation__list">
-                        <?php foreach ($projects as $key => $value): ?>
-                            <li class="main-navigation__list-item">
-                                <a class="main-navigation__list-item-link
-                                      <?php if ($key == $tab): ?>main-navigation__list-item--active<?php endif; ?>"
-                                      href="<?=$value["link"] . "?tab=" . $value["tab"]; ?>">
-                                    <?=$value["name"]; ?>
-                                </a>
-                                <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value["name"])) ?></span>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </nav>
+              <nav class="main-navigation">
+                <ul class="main-navigation__list">
+                    <?php foreach ($projects as $key => $value): ?>
+                      <li class="main-navigation__list-item">
+                        <a class="main-navigation__list-item-link <?php if ($key === $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?=$value["link"] . "?inset=" . $key; ?>"><?=$value["name"]; ?></a>
+                        <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value["name"])) ?></span>
+                      </li>
+                    <?php endforeach; ?>
+                </ul>
+              </nav>
 
                 <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
             </section>
