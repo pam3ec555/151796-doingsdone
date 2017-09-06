@@ -3,24 +3,20 @@
 require_once ("functions.php");
 
 // проверка на параметр запроса
-if (isset($_GET["tab"])) {
-    // параметр `tab`
-    $tab = $_GET["tab"];
-    // переменная, проверяющая существование введенного `tab`
-    $is_tab = false;
+if (isset($_GET["inset"])) {
+    $project_inset = filter_var($_GET["inset"], FILTER_VALIDATE_INT, ["options" => [
+        "min_range" => 0,
+        "max_range" => count($projects) - 1
+    ]]);
 
-    foreach ($projects as $key => $value) {
-        if ($value["tab"] == $tab) {
-            $is_tab = true;
-            break;
-        }
-    }
-
-    if (!$is_tab) {
-        http_response_code(404);
+    if ($project_inset || $project_inset === 0) {
+        $project_name = $projects[$project_inset]["name"];
+    } else {
+        return http_response_code(404);
     }
 } else {
-    $tab = 0;
+    $project_name = $projects[0]["name"];
+    $project_inset = 0;
 }
 
 // переменная проверяющая, есть ли параметр `add`
@@ -88,8 +84,9 @@ renderTemplate(
         "projects" => $projects,
         "tasks" => $tasks,
         "title" => $title,
-        "tab" => $tab,
         "add_task" => $add_task,
-        "errors" => $errors
+        "errors" => $errors,
+        "project_inset" => $project_inset,
+        "project_name" => $project_name
     ]
 );

@@ -62,7 +62,8 @@
                     [
                         "tasks" => $tasks,
                         "projects" => $projects,
-                        "tab" => $tab
+                        "project_inset" => $project_inset,
+                        "project_name" => $project_name
                     ]);
                 ?>
             </main>
