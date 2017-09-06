@@ -62,12 +62,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
 
-        if (isset($_FILES["file"])) {
-            $file_name = $_FILES["file"]["name"];
+        if (isset($_FILES["preview"])) {
+            $file_name = $_FILES["preview"]["name"];
             $file_path = __DIR__ . "/uploads/";
             $file_url = "/uploads/" . $file_name;
 
-            move_uploaded_file($_FILES["file"]["tmp_name"], $file_path . $file_name);
+            move_uploaded_file($_FILES["preview"]["tmp_name"], $file_path . $file_name);
+
+            if (move_uploaded_file($_FILES["preview"]["tmp_name"], $file_path . $file_name)) {
+                $test = "123";
+            }
         }
     }
 
@@ -75,6 +79,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (count($errors)) {
         $add_task = true;
     } else {
+        array_unshift($tasks, [
+            "task" => $_POST["name"],
+            "date_of_complete" => $_POST["date"],
+            "category" => $_POST["project"],
+            "is_complete" => false
+        ]);
     }
 }
 
