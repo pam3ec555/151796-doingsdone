@@ -7,21 +7,28 @@
         <div class="form__row">
             <label class="form__label" for="name">Название <sup>*</sup></label>
 
-            <input class="form__input form__input--error" type="text" name="name" id="name" value="" placeholder="Введите название" required>
+            <input class="form__input <?php if (in_array("name", $task_errors)): ?>form__input--error<?php endif;?>"
+                   type="text" name="name" id="name" value="<?=$name ?>"
+                   placeholder="Введите название" required>
         </div>
 
         <div class="form__row">
             <label class="form__label" for="project">Проект <sup>*</sup></label>
 
-            <select class="form__input form__input--select form__input--error" name="project" id="project" required>
-                <option value="incoming">Входящие</option>
+            <select class="form__input form__input--select
+                    <?php if (in_array("project", $task_errors)): ?>form__input--error<?php endif; ?>"
+                    name="project" id="project" required>
+                <option value="incoming" <?php if ($project === "incoming"): ?>selected<? endif; ?>>Входящие</option>
             </select>
         </div>
 
         <div class="form__row">
             <label class="form__label" for="date">Дата выполнения <sup>*</sup></label>
 
-            <input class="form__input form__input--date form__input--error" type="text" name="date" id="date" value="" placeholder="Введите дату в формате ДД.ММ.ГГГГ" required>
+            <input class="form__input form__input--date
+                   <?php if (in_array("date", $task_errors)): ?>form__input--error<?php endif;?>"
+                   type="text" name="date" id="date" value="<?=$date ?>"
+                   placeholder="Введите дату в формате ДД.ММ.ГГГГ" required>
         </div>
 
         <div class="form__row">

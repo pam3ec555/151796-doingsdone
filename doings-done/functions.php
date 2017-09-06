@@ -146,7 +146,13 @@ function renderTemplate($template_url, $data = false) {
     ob_get_flush();
 }
 
+/**
+ * Метод который получает на вход первую часть строки, и если строка -> слово, то идет проверка по ключевым словам
+ * @param $value
+ * @return false|string
+ */
 function getDateDay($value) {
+
     switch ($value) {
         case "сегодня":
             $value = date("d/m/Y");
@@ -154,38 +160,45 @@ function getDateDay($value) {
         case "завтра":
             $value = date("d/m/Y", strtotime("+1 day"));
             break;
-        case "воскресение" || "вс":
+        case "послезавтра":
+            $value = date("d/m/Y", strtotime("+2 day"));
+            break;
+        case "воскресение":
             $value = date("d/m/Y", strtotime("Sunday"));
             break;
-        case "понедельник" || "пн":
+        case "понедельник":
             $value = date("d/m/Y", strtotime("Monday"));
             break;
-        case "вторник" || "вт":
+        case "вторник":
             $value = date("d/m/Y", strtotime("Tuesday"));
             break;
-        case "среда" || "ср":
+        case "среда":
             $value = date("d/m/Y", strtotime("Wednesday"));
             break;
-        case "четверг" || "чт":
+        case "четверг":
             $value = date("d/m/Y", strtotime("Thursday"));
             break;
-        case "пятница" || "пт":
+        case "пятница":
             $value = date("d/m/Y", strtotime("Friday"));
             break;
-        case "суббота" || "сб":
+        case "суббота":
             $value = date("d/m/Y", strtotime("Saturday"));
             break;
     }
-//    /usr/lib/php/20160303/xdebug.so
 
     return $value;
 }
 
+/**
+ * Метод, который получает значение ДАТЫ и выводит формат ДАТЫ
+ * @param $value
+ * @return string
+ */
 function getDateFormat($value) {
     // формат по умолчанию
     $format = "d/m/Y";
 
-    switch ($value) {
+    switch (true) {
         case strpos($value, "/"):
             $format = "d/m/Y";
             break;
@@ -196,10 +209,16 @@ function getDateFormat($value) {
             $format = "d-m-Y";
             break;
     }
+
     return $format;
 }
 
-function getDateTimeFormat($value) {
+/**
+ * Метод, который преобразует значение строки в нужный вид для вычислений
+ * @param $value
+ * @return array|mixed|string
+ */
+function getDateValConversion($value) {
     // убираю внешние пробелы
     $value = trim($value);
     // приравниваю строку к нижнему регистру
@@ -209,8 +228,36 @@ function getDateTimeFormat($value) {
     // разбиваю строку на пробелы
     $value = explode(" ", $value);
 
+    return $value;
+}
+
+/**
+ * Метод, принимающий на вход значение даты и приводящий его в правильный вид
+ * @param $value
+ * @return array|false|mixed|string
+ */
+function getDateTimeValue($value) {
+    $value = getDateValConversion($value);
+
     if (count($value) === 2) {
-        $format = getDateFormat(getDateDay($value[0]))." "."h/i";
+        $value = getDateDay($value[0])." ".$value[1];
+    } else if (count($value) === 1){
+        $value = getDateDay($value[0]);
+    }
+
+    return $value;
+}
+
+/**
+ * Метод, принимающий на вход значение формата и преобразовывает его в правильный вид
+ * @param $value
+ * @return string
+ */
+function getDateTimeFormat($value) {
+    $value = getDateValConversion($value);
+
+    if (count($value) === 2) {
+        $format = getDateFormat(getDateDay($value[0]))." "."H:i";
     } else if (count($value) === 1){
         $format = getDateFormat(getDateDay($value[0]));
     }
@@ -218,6 +265,12 @@ function getDateTimeFormat($value) {
     return $format;
 }
 
+/**
+ * Метод, проверяющий валидность даты
+ * @param $value
+ * @param $format
+ * @return bool
+ */
 function validateDate($value, $format) {
     $date = DateTime::createFromFormat($format, $value);
     return $date && $date -> format($format) == $value;

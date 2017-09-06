@@ -45,11 +45,13 @@ $task_project = $_POST["task-project"] ?? "";
 $task_file = $_POST["task-file"] ?? "";
 
 // массив обязательных для заполнения полей
-$required = ["name", "project", "date"];
+$task_required = ["name", "project", "date"];
+
 // массив требований для правильности заполнений
-$rules = ["date"];
+$task_rules = ["date"];
+
 // массив ошибочных полей при отправки пользователем формы
-$errors = [];
+$task_errors = $task_errors || [];
 
 
 // валидация формы добавления задачи
@@ -57,22 +59,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     foreach ($_POST as $key => $value) {
         // если поле обязательное для заполнения и оно пустое
-        if (in_array($key, $required) && $value == "") {
-            $errors[] = $key;
+        if (in_array($key, $task_required) && $value == "") {
+            $task_errors[] = $key;
             break;
         }
 
         // если поле требует проверки на правильность заполнения
-        if  (in_array($key, $rules)) {
-            $date_value = getDateDay($value);
+        if  (in_array($key, $task_rules)) {
+            $date_value = getDateTimeValue($value);
             $date_format = getDateTimeFormat($value);
 
             $result = validateDate($date_value, $date_format);
 
             // если поле заполнено правильно
-//            if (!$result) {
-//                $errors[] = $key;
-//            }
+            if (!$result) {
+                $task_errors[] = $key;
+            }
         }
     }
 }
@@ -91,6 +93,11 @@ renderTemplate(
         "tasks" => $tasks,
         "title" => $title,
         "tab" => $tab,
-        "add_task" => $add_task
+        "add_task" => $add_task,
+        "task_errors" => $task_errors,
+        "task_name" => $task_name,
+        "task_date" => $task_date,
+        "task_project" => $task_project,
+        "task_file" => $task_file
     ]
 );
