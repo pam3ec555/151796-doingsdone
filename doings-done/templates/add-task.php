@@ -60,7 +60,6 @@ $project = $_POST["project"] ?? "";
 
             <div class="form__input-file">
                 <input class="visually-hidden" type="file" name="preview" id="preview" value="">
-                <input type="hidden" name="MAX_FILE_SIZE" value="50000" />
 
                 <label class="button button--transparent" for="preview">
                     <span>Выберите файл</span>

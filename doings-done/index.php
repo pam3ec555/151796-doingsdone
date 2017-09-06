@@ -4,6 +4,7 @@ require_once ("functions.php");
 
 // проверка на параметр запроса
 if (isset($_GET["inset"])) {
+    // фильтрация параметра inset
     $project_inset = filter_var($_GET["inset"], FILTER_VALIDATE_INT, ["options" => [
         "min_range" => 0,
         "max_range" => count($projects) - 1
@@ -12,6 +13,7 @@ if (isset($_GET["inset"])) {
     if ($project_inset || $project_inset === 0) {
         $project_name = $projects[$project_inset]["name"];
     } else {
+        // возвращаем ошибку 404 если параметр inset имеет несуществующее значение
         return http_response_code(404);
     }
 } else {
@@ -20,8 +22,6 @@ if (isset($_GET["inset"])) {
 }
 
 // переменная проверяющая, есть ли параметр `add`
-//$add_task = isset($_GET["add"]) ? true : false;
-
 if (isset($_GET["add"])) {
     $add_task = true;
 } else {
@@ -37,14 +37,15 @@ $task_rules = ["date"];
 // массив ошибочных полей при отправки пользователем формы
 $errors = [];
 
-
-
 // валидация формы добавления задачи
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     foreach ($_POST as $key => $value) {
-        // если поле обязательное для заполнения и оно пустое
-        if (in_array($key, $task_required) && $value == "") {
+        // безопастность введенных данных пользователя от html тегов
+        $value = htmlspecialchars($value);
+
+        // если поле обязательное для заполнения и оно пустое или заполнено только пробелами
+        if ((in_array($key, $task_required) && $value == "") || (in_array($key, $task_required) && !(trim($value)))) {
             $errors[] = $key;
             break;
         }
@@ -62,23 +63,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
 
+        // если пользователь загрузил файл, помещаем его в папку /uploads/
         if (isset($_FILES["preview"])) {
-            $file_name = $_FILES["preview"]["name"];
+            $file_name = basename($_FILES["preview"]["name"]);
             $file_path = __DIR__ . "/uploads/";
             $file_url = "/uploads/" . $file_name;
+            $file_tmp_name = $_FILES["preview"]["tmp_name"];
 
-            move_uploaded_file($_FILES["preview"]["tmp_name"], $file_path . $file_name);
-
-            if (move_uploaded_file($_FILES["preview"]["tmp_name"], $file_path . $file_name)) {
-                $test = "123";
-            }
+            move_uploaded_file($file_tmp_name, $file_path . $file_name);
         }
     }
 
-    //если нет ошибок
+    //если есть ошибки, то не закрываем форму
     if (count($errors)) {
         $add_task = true;
     } else {
+        // если ошибок нет, то добавляем эту задачу в список задач(первым)
         array_unshift($tasks, [
             "task" => $_POST["name"],
             "date_of_complete" => $_POST["date"],
