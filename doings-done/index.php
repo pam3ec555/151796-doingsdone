@@ -32,18 +32,6 @@ if (isset($_GET["add"])) {
     $add_task = false;
 }
 
-// имя задачи, отправленной на сервер
-$task_name = $_POST["task-name"] ?? "";
-
-// дата задачи, отправленной на сервер
-$task_date = $_POST["task-date"] ?? "";
-
-// проект задачи, отправленной на сервер
-$task_project = $_POST["task-project"] ?? "";
-
-// файл(-ы) задачи, отправленной(-ые) на сервер
-$task_file = $_POST["task-file"] ?? "";
-
 // массив обязательных для заполнения полей
 $task_required = ["name", "project", "date"];
 
@@ -51,7 +39,8 @@ $task_required = ["name", "project", "date"];
 $task_rules = ["date"];
 
 // массив ошибочных полей при отправки пользователем формы
-$task_errors = $task_errors || [];
+$errors = [];
+
 
 
 // валидация формы добавления задачи
@@ -60,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     foreach ($_POST as $key => $value) {
         // если поле обязательное для заполнения и оно пустое
         if (in_array($key, $task_required) && $value == "") {
-            $task_errors[] = $key;
+            $errors[] = $key;
             break;
         }
 
@@ -73,18 +62,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // если поле заполнено правильно
             if (!$result) {
-                $task_errors[] = $key;
+                $errors[] = $key;
             }
         }
+
+        if (isset($_FILES["file"])) {
+            $file_name = $_FILES["file"]["name"];
+            $file_path = __DIR__ . "/uploads/";
+            $file_url = "/uploads/" . $file_name;
+
+            move_uploaded_file($_FILES["file"]["tmp_name"], $file_path . $file_name);
+        }
+    }
+
+    //если нет ошибок
+    if (count($errors)) {
+        $add_task = true;
+    } else {
     }
 }
-
-// если нет ошибок
-//if (!count($errors)) {
-//    header("Location: index.php");
-//}
-
-
 
 renderTemplate(
     "templates/layout.php",
@@ -94,10 +90,6 @@ renderTemplate(
         "title" => $title,
         "tab" => $tab,
         "add_task" => $add_task,
-        "task_errors" => $task_errors,
-        "task_name" => $task_name,
-        "task_date" => $task_date,
-        "task_project" => $task_project,
-        "task_file" => $task_file
+        "errors" => $errors
     ]
 );

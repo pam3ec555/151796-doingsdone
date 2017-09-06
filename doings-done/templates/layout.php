@@ -111,11 +111,7 @@
 
 <?php if ($add_task) renderTemplate("templates/add-task.php",
     [
-      "task_errors" => $task_errors,
-      "task_name" => $task_name,
-      "task_date" => $task_date,
-      "task_project" => $task_project,
-      "task_file" => $task_file
+      "errors" => $errors
     ]);
 ?>
 

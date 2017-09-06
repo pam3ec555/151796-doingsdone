@@ -730,6 +730,10 @@ a:focus {
   appearance: none;
 }
 
+.form__error {
+  color: #f84646;
+}
+
 .form__input--error {
   background: transparent url("../img/icon-error.png") no-repeat right 10px top 50%;
   border-color: #f84646;
