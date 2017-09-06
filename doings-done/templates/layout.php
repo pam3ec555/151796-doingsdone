@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 
+
 <body class="<?php if ($add_task == true): ?>overlay<?php endif; ?>"><!--class="overlay"-->
 <h1 class="visually-hidden">Дела в порядке</h1>
 
@@ -20,7 +21,6 @@
 
             <div class="main-header__side">
                 <a class="main-header__side-item button button--plus" href="?add">Добавить задачу</a>
-
                 <div class="main-header__side-item user-menu">
                     <div class="user-menu__image">
                         <img src="img/user-pic.jpg" width="40" height="40" alt="Пользователь">
@@ -38,7 +38,6 @@
         <div class="content">
             <section class="content__side">
                 <h2 class="content__side-heading">Проекты</h2>
-
               <nav class="main-navigation">
                 <ul class="main-navigation__list">
                     <?php foreach ($projects as $key => $value): ?>
@@ -49,7 +48,6 @@
                     <?php endforeach; ?>
                 </ul>
               </nav>
-
                 <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
             </section>
 
@@ -74,7 +72,6 @@
 
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
-
         <a href="?add" class="main-footer__button button button--plus">Добавить задачу</a>
 
         <div class="main-footer__social social">

@@ -21,6 +21,7 @@ if (isset($_GET["inset"])) {
     $project_inset = 0;
 }
 
+
 // переменная проверяющая, есть ли параметр `add`
 if (isset($_GET["add"])) {
     $add_task = true;
@@ -100,3 +101,4 @@ renderTemplate(
         "project_name" => $project_name
     ]
 );
+

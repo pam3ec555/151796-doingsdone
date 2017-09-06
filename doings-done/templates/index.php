@@ -53,10 +53,9 @@
             </label>
           </td>
           <td class="task__date"><?=$value["date_of_complete"] ?></td>
-
           <td class="task__controls"></td>
         </tr>
         <?php endif; ?>
     <?php endforeach; ?>
-
 </table>
+
