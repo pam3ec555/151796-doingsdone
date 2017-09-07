@@ -1,6 +1,3 @@
-<?php
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +8,8 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body><!--class="overlay"-->
+
+<body class="<?php if ($add_task == true): ?>overlay<?php endif; ?>"><!--class="overlay"-->
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
@@ -22,8 +20,7 @@
             </a>
 
             <div class="main-header__side">
-                <a class="main-header__side-item button button--plus" href="#">Добавить задачу</a>
-
+                <a class="main-header__side-item button button--plus" href="?add">Добавить задачу</a>
                 <div class="main-header__side-item user-menu">
                     <div class="user-menu__image">
                         <img src="img/user-pic.jpg" width="40" height="40" alt="Пользователь">
@@ -41,18 +38,16 @@
         <div class="content">
             <section class="content__side">
                 <h2 class="content__side-heading">Проекты</h2>
-
-                <nav class="main-navigation">
-                    <ul class="main-navigation__list">
-                        <?php foreach ($projects as $key => $value): ?>
-                            <li class="main-navigation__list-item">
-                                <a class="main-navigation__list-item-link <?php if ($key === $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?=$value["link"] . "?inset=" . $key; ?>"><?=$value["name"]; ?></a>
-                                <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value["name"])) ?></span>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </nav>
-
+              <nav class="main-navigation">
+                <ul class="main-navigation__list">
+                    <?php foreach ($projects as $key => $value): ?>
+                      <li class="main-navigation__list-item">
+                        <a class="main-navigation__list-item-link <?php if ($key === $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?=$value["link"] . "?inset=" . $key; ?>"><?=$value["name"]; ?></a>
+                        <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value["name"])) ?></span>
+                      </li>
+                    <?php endforeach; ?>
+                </ul>
+              </nav>
                 <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
             </section>
 
@@ -77,8 +72,7 @@
 
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
-
-        <a class="main-footer__button button button--plus">Добавить задачу</a>
+        <a href="?add" class="main-footer__button button button--plus">Добавить задачу</a>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>
@@ -109,49 +103,11 @@
     </div>
 </footer>
 
-<div class="modal" hidden>
-    <button class="modal__close" type="button" name="button">Закрыть</button>
-
-    <h2 class="modal__heading">Добавление задачи</h2>
-
-    <form class="form" class="" action="index.html" method="post">
-        <div class="form__row">
-            <label class="form__label" for="name">Название <sup>*</sup></label>
-
-            <input class="form__input" type="text" name="name" id="name" value="" placeholder="Введите название">
-        </div>
-
-        <div class="form__row">
-            <label class="form__label" for="project">Проект <sup>*</sup></label>
-
-            <select class="form__input form__input--select" name="project" id="project">
-                <option value="">Входящие</option>
-            </select>
-        </div>
-
-        <div class="form__row">
-            <label class="form__label" for="date">Дата выполнения <sup>*</sup></label>
-
-            <input class="form__input form__input--date" type="text" name="date" id="date" value="" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
-        </div>
-
-        <div class="form__row">
-            <label class="form__label" for="file">Файл</label>
-
-            <div class="form__input-file">
-                <input class="visually-hidden" type="file" name="preview" id="preview" value="">
-
-                <label class="button button--transparent" for="preview">
-                    <span>Выберите файл</span>
-                </label>
-            </div>
-        </div>
-
-        <div class="form__row form__row--controls">
-            <input class="button" type="submit" name="" value="Добавить">
-        </div>
-    </form>
-</div>
+<?php if ($add_task) renderTemplate("templates/add-task.php",
+    [
+      "errors" => $errors
+    ]);
+?>
 
 <script type="text/javascript" src="js/script.js"></script>
 </body>

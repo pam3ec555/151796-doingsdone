@@ -19,7 +19,6 @@ $days_until_deadline = floor(($task_deadline_ts - $current_ts) / $SECONDS_PER_DA
 $title = "Главная";
 
 // массив с проектами
-//$projects = ["Все", "Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
 $projects = [
     [
         "name" => "Все",
@@ -46,7 +45,6 @@ $projects = [
         "link" => "index.php"
     ]
 ];
-
 
 // двумерный массив с задачами
 $tasks = [
@@ -139,3 +137,134 @@ function renderTemplate($template_url, $data = false) {
     // Сброс буфера вывода
     ob_get_flush();
 }
+
+/**
+ * Метод который получает на вход первую часть строки, и если строка -> слово, то идет проверка по ключевым словам
+ * @param $value
+ * @return false|string
+ */
+function getDateDay($value) {
+
+    switch ($value) {
+        case "сегодня":
+            $value = date("d/m/Y");
+            break;
+        case "завтра":
+            $value = date("d/m/Y", strtotime("+1 day"));
+            break;
+        case "послезавтра":
+            $value = date("d/m/Y", strtotime("+2 day"));
+            break;
+        case "воскресение":
+            $value = date("d/m/Y", strtotime("Sunday"));
+            break;
+        case "понедельник":
+            $value = date("d/m/Y", strtotime("Monday"));
+            break;
+        case "вторник":
+            $value = date("d/m/Y", strtotime("Tuesday"));
+            break;
+        case "среда":
+            $value = date("d/m/Y", strtotime("Wednesday"));
+            break;
+        case "четверг":
+            $value = date("d/m/Y", strtotime("Thursday"));
+            break;
+        case "пятница":
+            $value = date("d/m/Y", strtotime("Friday"));
+            break;
+        case "суббота":
+            $value = date("d/m/Y", strtotime("Saturday"));
+            break;
+    }
+
+    return $value;
+}
+
+/**
+ * Метод, который получает значение ДАТЫ и выводит формат ДАТЫ
+ * @param $value
+ * @return string
+ */
+function getDateFormat($value) {
+    // формат по умолчанию
+    $format = "d/m/Y";
+
+    switch (true) {
+        case strpos($value, "/"):
+            $format = "d/m/Y";
+            break;
+        case strpos($value, "."):
+            $format = "d.m.Y";
+            break;
+        case strpos($value, "-"):
+            $format = "d-m-Y";
+            break;
+    }
+
+    return $format;
+}
+
+/**
+ * Метод, который преобразует значение строки в нужный вид для вычислений
+ * @param $value
+ * @return array|mixed|string
+ */
+function getDateValConversion($value) {
+    // убираю внешние пробелы
+    $value = trim($value);
+    // приравниваю строку к нижнему регистру
+    $value = strtolower($value);
+    // убираю лишние пробелы и избавляюсь от 'в', так как пользователь может его ввести
+    $value = preg_replace(["/  +/", "/ в /"]," ", $value);
+    // разбиваю строку на пробелы
+    $value = explode(" ", $value);
+
+    return $value;
+}
+
+/**
+ * Метод, принимающий на вход значение даты и приводящий его в правильный вид
+ * @param $value
+ * @return array|false|mixed|string
+ */
+function getDateTimeValue($value) {
+    $value = getDateValConversion($value);
+
+    if (count($value) === 2) {
+        $value = getDateDay($value[0])." ".$value[1];
+    } else if (count($value) === 1){
+        $value = getDateDay($value[0]);
+    }
+
+    return $value;
+}
+
+/**
+ * Метод, принимающий на вход значение формата и преобразовывает его в правильный вид
+ * @param $value
+ * @return string
+ */
+function getDateTimeFormat($value) {
+    $value = getDateValConversion($value);
+
+    if (count($value) === 2) {
+        $format = getDateFormat(getDateDay($value[0]))." "."H:i";
+    } else if (count($value) === 1){
+        $format = getDateFormat(getDateDay($value[0]));
+    }
+
+    return $format;
+}
+
+/**
+ * Метод, проверяющий валидность даты
+ * @param $value
+ * @param $format
+ * @return bool
+ */
+function validateDate($value, $format) {
+    $date = DateTime::createFromFormat($format, $value);
+    return $date && $date -> format($format) == $value;
+}
+
