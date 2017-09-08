@@ -89,6 +89,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
+$login = true;
+
 renderTemplate(
     "templates/layout.php",
     [
@@ -98,7 +100,8 @@ renderTemplate(
         "add_task" => $add_task,
         "errors" => $errors,
         "project_inset" => $project_inset,
-        "project_name" => $project_name
+        "project_name" => $project_name,
+        "login" => $login
     ]
 );
 

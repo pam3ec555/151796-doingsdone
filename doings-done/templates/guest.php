@@ -3,64 +3,38 @@
 
 <head>
     <meta charset="UTF-8">
-    <title><?=$title ?></title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 
-
-<body class="<?php if ($add_task === true || $login === true): ?>overlay<?php endif; ?>"><!--class="overlay"-->
+<body class="body-background"><!--class="overlay"-->
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
-    <div class="container container--with-sidebar">
+    <div class="container">
         <header class="main-header">
             <a href="#">
-                <img src="img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
+                <img src="../img/logo.png" width="153" height="42" alt="Логитип Дела в порядке">
             </a>
 
             <div class="main-header__side">
-                <a class="main-header__side-item button button--plus" href="?add">Добавить задачу</a>
-                <div class="main-header__side-item user-menu">
-                    <div class="user-menu__image">
-                        <img src="img/user-pic.jpg" width="40" height="40" alt="Пользователь">
-                    </div>
-
-                    <div class="user-menu__data">
-                        <p>Константин</p>
-
-                        <a href="#">Выйти</a>
-                    </div>
-                </div>
+                <a class="main-header__side-item button button--transparent" href="#">Войти</a>
             </div>
         </header>
 
         <div class="content">
-            <section class="content__side">
-                <h2 class="content__side-heading">Проекты</h2>
-              <nav class="main-navigation">
-                <ul class="main-navigation__list">
-                    <?php foreach ($projects as $key => $value): ?>
-                      <li class="main-navigation__list-item">
-                        <a class="main-navigation__list-item-link <?php if ($key === $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?=$value["link"] . "?inset=" . $key; ?>"><?=$value["name"]; ?></a>
-                        <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value["name"])) ?></span>
-                      </li>
-                    <?php endforeach; ?>
-                </ul>
-              </nav>
-                <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
-            </section>
+            <section class="welcome">
+                <h2 class="welcome__heading">«Дела в порядке»</h2>
 
-            <main class="content__main">
-                <?=renderTemplate("templates/index.php",
-                    [
-                        "tasks" => $tasks,
-                        "projects" => $projects,
-                        "project_inset" => $project_inset,
-                        "project_name" => $project_name
-                    ]);
-                ?>
-            </main>
+                <div class="welcome__text">
+                    <p>«Дела в порядке» — это веб приложение для удобного ведения списка дел. Сервис помогает пользователям не забывать о предстоящих важных событиях и задачах.</p>
+
+                    <p>После создания аккаунта, пользователь может начать вносить свои дела, деля их по проектам и указывая сроки.</p>
+                </div>
+
+                <a class="welcome__button button" href="#">Зарегистрироваться</a>
+            </section>
         </div>
     </div>
 </div>
@@ -72,7 +46,8 @@
 
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
-        <a href="?add" class="main-footer__button button button--plus">Добавить задачу</a>
+
+        <a class="main-footer__button button button--plus">Добавить задачу</a>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>
@@ -97,18 +72,43 @@
             <span class="visually-hidden">Разработано:</span>
 
             <a href="https://htmlacademy.ru/intensive/php">
-                <img src="img/htmlacademy.svg" alt="HTML Academy" width="118" height="40">
+                <img src="../img/htmlacademy.svg" alt="HTML Academy" width="118" height="40">
             </a>
         </div>
     </div>
 </footer>
 
-<?php if ($add_task) renderTemplate("templates/add-task.php",
-    [
-      "errors" => $errors
-    ]);
-?>
+<div class="modal" hidden>
+    <button class="modal__close" type="button" name="button">Закрыть</button>
 
-<script type="text/javascript" src="js/script.js"></script>
+    <h2 class="modal__heading">Вход на сайт</h2>
+
+    <form class="form" class="" action="index.html" method="post">
+        <div class="form__row">
+            <label class="form__label" for="email">E-mail <sup>*</sup></label>
+
+            <input class="form__input form__input--error" type="text" name="email" id="email" value="" placeholder="Введите e-mail">
+
+            <p class="form__message">E-mail введён некорректно</p>
+        </div>
+
+        <div class="form__row">
+            <label class="form__label" for="password">Пароль <sup>*</sup></label>
+
+            <input class="form__input" type="password" name="password" id="password" value="" placeholder="Введите пароль">
+        </div>
+
+        <div class="form__row">
+            <label class="checkbox">
+                <input class="checkbox__input visually-hidden" type="checkbox" checked>
+                <span class="checkbox__text">Запомнить меня</span>
+            </label>
+        </div>
+
+        <div class="form__row form__row--controls">
+            <input class="button" type="submit" name="" value="Войти">
+        </div>
+    </form>
+</div>
 </body>
 </html>
