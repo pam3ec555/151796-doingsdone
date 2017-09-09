@@ -9,11 +9,12 @@
 </head>
 
 
-<body class="<?php if ($add_task|| $login): ?>overlay<?php endif; ?>"><!--class="overlay"-->
+<body class="<?php if ($add_task|| $login): ?>overlay<?php endif; ?>
+             <?php if (!isset($_SESSION["user"])): ?>body-background<?php endif; ?>">
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
-    <div class="container container--with-sidebar">
+    <div class="container <?php if (isset($_SESSION["user"])): ?>container--with-sidebar<?php endif; ?>">
         <header class="main-header">
             <?=renderTemplate("templates/header.php", ["login" => $login]); ?>
         </header>
