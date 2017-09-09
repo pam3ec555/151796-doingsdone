@@ -9,7 +9,9 @@
 </head>
 
 
+
 <body class="<?php if ($add_task|| $login): ?>overlay<?php endif; ?><?php if (!isset($_SESSION["user"])): ?>body-background<?php endif; ?>">
+
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
