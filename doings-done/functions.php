@@ -122,8 +122,8 @@ function renderTemplate($template_url, $data = false) {
         return "";
     }
 
-    // Буферизация вывода с сжатием
-    ob_start("ob_gzhandler");
+    // Буферизация вывода
+    ob_start();
 
     // Проверка на существование данных
     if ($data) {
@@ -132,7 +132,7 @@ function renderTemplate($template_url, $data = false) {
     }
 
     // Вызов шаблона
-    require_once ($template_url);
+    require_once($template_url);
 
     // Сброс буфера вывода
     ob_get_flush();
@@ -266,5 +266,33 @@ function getDateTimeFormat($value) {
 function validateDate($value, $format) {
     $date = DateTime::createFromFormat($format, $value);
     return $date && $date -> format($format) == $value;
+}
+
+/**
+ * Метод, проверяющий валидность e-mail
+ * @param $value
+ * @return bool
+ */
+function validateEmail($value) {
+    return filter_var($value, FILTER_VALIDATE_EMAIL);
+}
+
+/**
+ * Метод, сравнивающий e-mail`ы
+ * @param $email
+ * @param $users
+ * @return array|null
+ */
+function searchUserByEmail($email, $users) {
+    $result = null;
+
+    foreach ($users as $user) {
+        if ($user["email"] === $email) {
+            $result = $user;
+            break;
+        }
+    }
+
+    return $result;
 }
 

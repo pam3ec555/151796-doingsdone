@@ -1,6 +1,7 @@
 <?php
 
 require_once ("functions.php");
+require_once ("userdata.php");
 
 // проверка на параметр запроса
 if (isset($_GET["inset"])) {
@@ -30,33 +31,39 @@ if (isset($_GET["add"])) {
 }
 
 // массив обязательных для заполнения полей
-$task_required = ["name", "project", "date"];
+$required = ["name", "project", "date", "email", "password"];
 
 // массив требований для правильности заполнений
-$task_rules = ["date"];
+$rules = ["date", "email"];
 
 // массив ошибочных полей при отправки пользователем формы
 $errors = [];
 
 // валидация формы добавления задачи
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     foreach ($_POST as $key => $value) {
         // безопастность введенных данных пользователя от html тегов
         $value = htmlspecialchars($value);
 
         // если поле обязательное для заполнения и оно пустое или заполнено только пробелами
-        if ((in_array($key, $task_required) && $value == "") || (in_array($key, $task_required) && !(trim($value)))) {
+        if ((in_array($key, $required) && $value === "") || (in_array($key, $required) && !(trim($value)))) {
             $errors[] = $key;
             break;
         }
 
         // если поле требует проверки на правильность заполнения
-        if  (in_array($key, $task_rules)) {
-            $date_value = getDateTimeValue($value);
-            $date_format = getDateTimeFormat($value);
-
-            $result = validateDate($date_value, $date_format);
+        if  (in_array($key, $rules)) {
+            switch ($key) {
+                case "date":
+                    $date_value = getDateTimeValue($value);
+                    $date_format = getDateTimeFormat($value);
+                    $result = validateDate($date_value, $date_format);
+                    break;
+                case "email":
+                    $result = validateEmail($value);
+                    break;
+            }
 
             // если поле заполнено правильно
             if (!$result) {
@@ -89,7 +96,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-$login = true;
+// проверка на параметр логин
+if (isset($_GET["login"])) {
+    $login = true;
+} else {
+    $login = false;
+}
+
+session_start();
+
+// массив ошибочных полей при отправки формы("ПОЛЬЗОВАТЕЛЬ НЕ СУЩЕСТВУЕТ")
+$wrongs = [];
+
+if (!empty($_POST)) {
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+
+    if ($user = searchUserByEmail($email, $users)) {
+        if (password_verify($password, $user["password"])) {
+            $_SESSION["user"] = $user;
+        } else {
+            $wrongs[] = "password";
+            header("Location: templates/index.php");
+        }
+    } else {
+        $wrongs[] = "email";
+    }
+}
+
+
 
 renderTemplate(
     "templates/layout.php",
