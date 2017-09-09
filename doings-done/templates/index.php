@@ -1,3 +1,9 @@
+<?php
+
+$show_complete_tasks = $_COOKIE["show_complete_tasks"];
+
+?>
+
 <h2 class="content__main-heading">Список задач</h2>
 
 <form class="search-form" action="index.php" method="post">
@@ -30,8 +36,8 @@
     </div>
 
     <label class="checkbox">
-        <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
-        <input id="show-complete-tasks" class="checkbox__input visually-hidden" type="checkbox">
+        <input id="show-complete-tasks" class="checkbox__input visually-hidden" type="checkbox"
+            <?php if ($show_complete_tasks): ?>checked<? endif; ?>
         <span class="checkbox__text">Показывать выполненные</span>
     </label>
 </div>

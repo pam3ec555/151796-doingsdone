@@ -45,6 +45,14 @@ if (isset($_GET["add"])) {
     $add_task = false;
 }
 
+if (isset($_GET["show_completed"])) {
+    setcookie("show_complete_tasks", true, strtotime("+30 day"), "/");
+
+    header("index.php");
+} else {
+    setcookie("show_complete_tasks", false, strtotime("+30 day"), "/");
+}
+
 // массив ошибочных полей при отправки формы("ПОЛЬЗОВАТЕЛЬ НЕ СУЩЕСТВУЕТ")
 $wrongs = [];
 
