@@ -68,7 +68,7 @@ $project = $_POST["project"] ?? "";
         </div>
 
         <div class="form__row form__row--controls">
-            <input class="button" type="submit" name="submit" value="Добавить">
+            <input class="button" type="submit" name="submit" value="add-task">
         </div>
     </form>
 </div>

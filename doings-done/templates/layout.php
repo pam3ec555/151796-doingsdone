@@ -9,7 +9,7 @@
 </head>
 
 
-<body class="<?php if ($add_task === true || $login === true): ?>overlay<?php endif; ?>"><!--class="overlay"-->
+<body class="<?php if ($add_task|| $login): ?>overlay<?php endif; ?>"><!--class="overlay"-->
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
@@ -19,31 +19,35 @@
         </header>
 
         <div class="content">
-            <section class="content__side">
-                <h2 class="content__side-heading">Проекты</h2>
-              <nav class="main-navigation">
-                <ul class="main-navigation__list">
-                    <?php foreach ($projects as $key => $value): ?>
-                      <li class="main-navigation__list-item">
-                        <a class="main-navigation__list-item-link <?php if ($key === $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?=$value["link"] . "?inset=" . $key; ?>"><?=$value["name"]; ?></a>
-                        <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value["name"])) ?></span>
-                      </li>
-                    <?php endforeach; ?>
-                </ul>
-              </nav>
-                <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
-            </section>
+            <?php if (isset($_SESSION["user"])): ?>
+                <section class="content__side">
+                    <h2 class="content__side-heading">Проекты</h2>
+                  <nav class="main-navigation">
+                    <ul class="main-navigation__list">
+                        <?php foreach ($projects as $key => $value): ?>
+                          <li class="main-navigation__list-item">
+                            <a class="main-navigation__list-item-link <?php if ($key === $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?=$value["link"] . "?inset=" . $key; ?>"><?=$value["name"]; ?></a>
+                            <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value["name"])) ?></span>
+                          </li>
+                        <?php endforeach; ?>
+                    </ul>
+                  </nav>
+                    <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
+                </section>
 
-            <main class="content__main">
-                <?=renderTemplate("templates/index.php",
-                    [
-                        "tasks" => $tasks,
-                        "projects" => $projects,
-                        "project_inset" => $project_inset,
-                        "project_name" => $project_name
-                    ]);
-                ?>
-            </main>
+                <main class="content__main">
+                    <?=renderTemplate("templates/index.php",
+                        [
+                            "tasks" => $tasks,
+                            "projects" => $projects,
+                            "project_inset" => $project_inset,
+                            "project_name" => $project_name
+                        ]);
+                    ?>
+                </main>
+            <?php else:
+                renderTemplate("templates/guest.php");
+            endif; ?>
         </div>
     </div>
 </div>
@@ -88,11 +92,15 @@
 
 <?php if ($add_task) renderTemplate("templates/add-task.php",
     [
-      "errors" => $errors
+        "errors" => $errors
     ]);
 ?>
 
-<?php if ($login) renderTemplate("templates/login-modal.php"); ?>
+<?php if ($login) renderTemplate("templates/login-modal.php",
+    [
+        "errors" => $errors,
+        "wrongs" => $wrongs
+    ]); ?>
 
 <script type="text/javascript" src="js/script.js"></script>
 </body>

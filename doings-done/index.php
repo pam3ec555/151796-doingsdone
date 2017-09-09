@@ -1,7 +1,16 @@
 <?php
 
-require_once ("functions.php");
 require_once ("userdata.php");
+require_once ("functions.php");
+
+session_start();
+
+// проверка на параметр logout, если true, то нужно разлогинить пользователя
+if (isset($_GET["logout"])) {
+    unset($_SESSION["user"]);
+
+    header("index.php");
+}
 
 // проверка на параметр запроса
 if (isset($_GET["inset"])) {
@@ -22,6 +31,12 @@ if (isset($_GET["inset"])) {
     $project_inset = 0;
 }
 
+// проверка на параметр логин
+if (isset($_GET["login"])) {
+    $login = true;
+} else {
+    $login = false;
+}
 
 // переменная проверяющая, есть ли параметр `add`
 if (isset($_GET["add"])) {
@@ -29,6 +44,9 @@ if (isset($_GET["add"])) {
 } else {
     $add_task = false;
 }
+
+// массив ошибочных полей при отправки формы("ПОЛЬЗОВАТЕЛЬ НЕ СУЩЕСТВУЕТ")
+$wrongs = [];
 
 // массив обязательных для заполнения полей
 $required = ["name", "project", "date", "email", "password"];
@@ -54,6 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // если поле требует проверки на правильность заполнения
         if  (in_array($key, $rules)) {
+            // проверяем тип поля
             switch ($key) {
                 case "date":
                     $date_value = getDateTimeValue($value);
@@ -82,49 +101,47 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    //если есть ошибки, то не закрываем форму
-    if (count($errors)) {
-        $add_task = true;
-    } else {
-        // если ошибок нет, то добавляем эту задачу в список задач(первым)
-        array_unshift($tasks, [
-            "task" => $_POST["name"],
-            "date_of_complete" => $_POST["date"],
-            "category" => $_POST["project"],
-            "is_complete" => false
-        ]);
+    // проверяем, какая форма отправилась
+    switch ($_POST["submit"]) {
+        case "add-task":
+            //если есть ошибки, то не закрываем форму
+            if (count($errors)) {
+                $add_task = true;
+            } else {
+                // если ошибок нет, то добавляем эту задачу в список задач(первым)
+                array_unshift($tasks, [
+                    "task" => $_POST["name"],
+                    "date_of_complete" => $_POST["date"],
+                    "category" => $_POST["project"],
+                    "is_complete" => false
+                ]);
+            }
+            break;
+        case "login":
+            $email = $_POST["email"];
+            $password = $_POST["password"];
+
+            // проверяем существование введенного e-mail`а
+            if ($user = searchUserByEmail($email, $users)) {
+                // проверяем правильность пароля
+                if (password_verify($password, $user["password"])) {
+                    // аутентификация прошла успешно, сохраняем пользователя в сессии
+                    $_SESSION["user"] = $user;
+                    header("Location: index.php");
+                } else {
+                    $wrongs[] = "password";
+                }
+            } else {
+                $wrongs[] = "email";
+            }
+
+            // если есть ошибки, то оставляем pop-up и предлагаем исправить ошибки
+            if (count($errors) || count($wrongs)) {
+                $login = true;
+            }
+            break;
     }
 }
-
-// проверка на параметр логин
-if (isset($_GET["login"])) {
-    $login = true;
-} else {
-    $login = false;
-}
-
-session_start();
-
-// массив ошибочных полей при отправки формы("ПОЛЬЗОВАТЕЛЬ НЕ СУЩЕСТВУЕТ")
-$wrongs = [];
-
-if (!empty($_POST)) {
-    $email = $_POST["email"];
-    $password = $_POST["password"];
-
-    if ($user = searchUserByEmail($email, $users)) {
-        if (password_verify($password, $user["password"])) {
-            $_SESSION["user"] = $user;
-        } else {
-            $wrongs[] = "password";
-            header("Location: templates/index.php");
-        }
-    } else {
-        $wrongs[] = "email";
-    }
-}
-
-
 
 renderTemplate(
     "templates/layout.php",
@@ -136,7 +153,8 @@ renderTemplate(
         "errors" => $errors,
         "project_inset" => $project_inset,
         "project_name" => $project_name,
-        "login" => $login
+        "login" => $login,
+        "wrongs" => $wrongs
     ]
 );
 
