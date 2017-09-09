@@ -1,6 +1,7 @@
 'use strict';
 
 var expandControls = document.querySelectorAll('.expand-control');
+var dir = "/151796-doingsdone/doings-done";
 
 var hidePopups = function() {
   [].forEach.call(document.querySelectorAll('.expand-list'), function(item) {
@@ -18,8 +19,10 @@ document.body.addEventListener('click', hidePopups, true);
 
 var $checkbox = document.getElementsByClassName('checkbox__input')[0];
 
-$checkbox.addEventListener('change', function(event) {
-  var is_checked = +event.target.checked;
+if ($checkbox) {
+    $checkbox.addEventListener('change', function(event) {
+        var is_checked = +event.target.checked;
 
-  window.location = '/index.php?show_completed=' + is_checked;
-});
+        window.location = dir + '/index.php?show_completed=' + is_checked;
+    });
+}

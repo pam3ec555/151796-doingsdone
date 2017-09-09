@@ -1,9 +1,3 @@
-<?php
-
-$show_complete_tasks = $_COOKIE["show_complete_tasks"];
-
-?>
-
 <h2 class="content__main-heading">Список задач</h2>
 
 <form class="search-form" action="index.php" method="post">
@@ -37,14 +31,18 @@ $show_complete_tasks = $_COOKIE["show_complete_tasks"];
 
     <label class="checkbox">
         <input id="show-complete-tasks" class="checkbox__input visually-hidden" type="checkbox"
-            <?php if ($show_complete_tasks): ?>checked<? endif; ?>
+            <?php if ($show_complete_tasks == 1): ?>checked<?php endif; ?>>
         <span class="checkbox__text">Показывать выполненные</span>
     </label>
 </div>
 
 <table class="tasks">
     <?php foreach ($tasks as $key => $value): ?>
-        <?php if ($project_name === $value["category"] || $project_inset === 0): ?>
+        <?php if (
+                     ($project_name === $value["category"] || $project_inset === 0) &&
+                     ((!$value["is_complete"] && $show_complete_tasks == 0) || $show_complete_tasks == 1)
+                 ):
+        ?>
         <tr class="tasks__item <?php if ($value["is_complete"] == true): ?>task--completed<?php endif; ?>">
           <td class="task__select">
             <label class="checkbox task__checkbox">

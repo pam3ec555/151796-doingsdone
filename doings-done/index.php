@@ -45,12 +45,18 @@ if (isset($_GET["add"])) {
     $add_task = false;
 }
 
+// проверка на галочку(показывать выполненные задания)
 if (isset($_GET["show_completed"])) {
-    setcookie("show_complete_tasks", true, strtotime("+30 day"), "/");
+    $show_complete_tasks = filter_var($_GET["show_completed"], FILTER_VALIDATE_INT);
+    if ($show_complete_tasks == 1) {
+        setcookie("show_complete_tasks", true, strtotime("+30 day"), "/");
 
-    header("index.php");
-} else {
-    setcookie("show_complete_tasks", false, strtotime("+30 day"), "/");
+        header("index.php");
+    } else if ($show_complete_tasks == 0) {
+        setcookie("show_complete_tasks", false, strtotime("+30 day"), "/");
+    } else {
+        return http_response_code(404);
+    }
 }
 
 // массив ошибочных полей при отправки формы("ПОЛЬЗОВАТЕЛЬ НЕ СУЩЕСТВУЕТ")
@@ -162,7 +168,8 @@ renderTemplate(
         "project_inset" => $project_inset,
         "project_name" => $project_name,
         "login" => $login,
-        "wrongs" => $wrongs
+        "wrongs" => $wrongs,
+        "show_complete_tasks" => $show_complete_tasks
     ]
 );
 
