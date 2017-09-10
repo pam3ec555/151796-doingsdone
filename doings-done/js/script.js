@@ -1,6 +1,7 @@
 'use strict';
 
 var expandControls = document.querySelectorAll('.expand-control');
+var dir = "/151796-doingsdone/doings-done";
 
 var hidePopups = function() {
   [].forEach.call(document.querySelectorAll('.expand-list'), function(item) {
@@ -22,6 +23,6 @@ if ($checkbox) {
     $checkbox.addEventListener('change', function(event) {
         var is_checked = +event.target.checked;
 
-        window.location = '/index.php?show_completed=' + is_checked;
+        window.location = dir + '/index.php?show_completed=' + is_checked;
     });
 }
