@@ -50,8 +50,6 @@ if (isset($_GET["show_completed"])) {
     $show_complete_tasks = filter_var($_GET["show_completed"], FILTER_VALIDATE_INT);
     if ($show_complete_tasks == 1) {
         setcookie("show_complete_tasks", true, strtotime("+30 day"), "/");
-
-        header("index.php");
     } else if ($show_complete_tasks == 0) {
         setcookie("show_complete_tasks", false, strtotime("+30 day"), "/");
     } else {

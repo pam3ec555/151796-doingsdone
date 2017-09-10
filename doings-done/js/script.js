@@ -24,5 +24,6 @@ if ($checkbox) {
         var is_checked = +event.target.checked;
 
         window.location = dir + '/index.php?show_completed=' + is_checked;
+
     });
 }
