@@ -14,8 +14,8 @@ CREATE TABLE tasks (
   name CHAR(64),
   file CHAR,
   deadline DATETIME,
-  project INT,
-  author INT
+  project_id INT,
+  author_id INT
 );
 
 CREATE TABLE users (
@@ -24,7 +24,5 @@ CREATE TABLE users (
   email CHAR(32) UNIQUE ,
   name CHAR(32),
   password CHAR(64),
-  contacts CHAR,
-  tasks TEXT,
-  projects TEXT
+  contacts CHAR
 );
