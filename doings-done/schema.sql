@@ -21,7 +21,7 @@ CREATE TABLE tasks (
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   date_of_registration DATETIME,
-  email CHAR(32) UNIQUE ,
+  email CHAR(32) UNIQUE,
   name CHAR(32),
   password CHAR(64),
   contacts CHAR
