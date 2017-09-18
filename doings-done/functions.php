@@ -140,7 +140,7 @@ function renderTemplate($template_url, $data = false) {
 
 /**
  * Метод который получает на вход первую часть строки, и если строка -> слово, то идет проверка по ключевым словам
- * @param $value
+ * @param $value // значение
  * @return false|string
  */
 function getDateDay($value) {
@@ -183,7 +183,7 @@ function getDateDay($value) {
 
 /**
  * Метод, который получает значение ДАТЫ и выводит формат ДАТЫ
- * @param $value
+ * @param $value // значение
  * @return string
  */
 function getDateFormat($value) {
@@ -207,7 +207,7 @@ function getDateFormat($value) {
 
 /**
  * Метод, который преобразует значение строки в нужный вид для вычислений
- * @param $value
+ * @param $value // значение
  * @return array|mixed|string
  */
 function getDateValConversion($value) {
@@ -225,7 +225,7 @@ function getDateValConversion($value) {
 
 /**
  * Метод, принимающий на вход значение даты и приводящий его в правильный вид
- * @param $value
+ * @param $value // значение
  * @return array|false|mixed|string
  */
 function getDateTimeValue($value) {
@@ -242,8 +242,8 @@ function getDateTimeValue($value) {
 
 /**
  * Метод, принимающий на вход значение формата и преобразовывает его в правильный вид
- * @param $value
- * @return string
+ * @param $value // значение
+ * @return string // правильный вид формата
  */
 function getDateTimeFormat($value) {
     $value = getDateValConversion($value);
@@ -259,9 +259,9 @@ function getDateTimeFormat($value) {
 
 /**
  * Метод, проверяющий валидность даты
- * @param $value
- * @param $format
- * @return bool
+ * @param $value // значение
+ * @param $format // формат даты
+ * @return bool // валидность
  */
 function validateDate($value, $format) {
     $date = DateTime::createFromFormat($format, $value);
@@ -292,6 +292,74 @@ function searchUserByEmail($email, $users) {
             break;
         }
     }
+
+    return $result;
+}
+
+/**
+ * Метод, для получения данных, возвращающий массив данных из БД
+ * @param $link // ресурс соединения
+ * @param $sql // SQL-запрос с плейсхолдерами (знаками ?) на всех переменных значений
+ * @param array $data
+ * @return array // массив данных из БД
+ */
+function selectData($link, $sql, $data = []) {
+    $array = [];
+
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $array = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    return $array;
+}
+
+/**
+ * Метод, для вставки данных в таблицу, возвращающий id последней добавленной записи
+ * @param $link // ресурс соединения
+ * @param $table // имя таблицы, в которую добавляются данные
+ * @param $data // [необязательный аргумент] простой массив со всеми значениями для запроса.
+ * @return int // id последней добавленной записи
+ */
+function insertData($link, $table, $data) {
+    $sql = null;
+    $keys = null;
+    $values = null;
+    $id_of_last_entry = false;
+
+    // формируем SQL-запрос
+    if (count($data)) {
+        foreach ($data as $key => $value) {
+            $keys .= $key . ", ";
+            $values .= "?, ";
+        }
+
+        if ($keys && $values) {
+            $keys = substr($keys, 0, -2);
+            $values = substr($values, 0, -2);
+            $sql = "INSERT INTO " . $table . " (" . $keys . ") " . "VALUES " . "(" . $values . ")";
+        }
+    }
+
+    if ($sql) {
+        $stmt = db_get_prepare_stmt($link, $sql, $data);
+        mysqli_stmt_execute($stmt);
+        $id_of_last_entry = mysqli_insert_id($link);
+    }
+
+    return $id_of_last_entry;
+}
+
+/**
+ * Метод, выполняющий произвольный запрос(UPDATE, DELETE, ...) и возвращающий true, в случае успеха и false, в случае ошибки
+ * @param $link // ресурс соединения
+ * @param $sql // SQL-запрос с плейсхолдерами (знаками ?) на всех переменных значений
+ * @param array $data // [необязательный аргумент] простой массив со всеми значениями для запроса
+ * @return bool
+ */
+function execQuery($link, $sql, $data = []) {
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+    $result = mysqli_stmt_execute($stmt);
 
     return $result;
 }
