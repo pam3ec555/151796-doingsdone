@@ -147,62 +147,38 @@ function getDateDay($value) {
 
     switch ($value) {
         case "сегодня":
-            $value = date("d/m/Y");
+            $value = date("d.m.Y");
             break;
         case "завтра":
-            $value = date("d/m/Y", strtotime("+1 day"));
+            $value = date("d.m.Y", strtotime("+1 day"));
             break;
         case "послезавтра":
-            $value = date("d/m/Y", strtotime("+2 day"));
+            $value = date("d.m.Y", strtotime("+2 day"));
             break;
         case "воскресение":
-            $value = date("d/m/Y", strtotime("Sunday"));
+            $value = date("d.m.Y", strtotime("Sunday"));
             break;
         case "понедельник":
-            $value = date("d/m/Y", strtotime("Monday"));
+            $value = date("d.m.Y", strtotime("Monday"));
             break;
         case "вторник":
-            $value = date("d/m/Y", strtotime("Tuesday"));
+            $value = date("d.m.Y", strtotime("Tuesday"));
             break;
         case "среда":
-            $value = date("d/m/Y", strtotime("Wednesday"));
+            $value = date("d.m.Y", strtotime("Wednesday"));
             break;
         case "четверг":
-            $value = date("d/m/Y", strtotime("Thursday"));
+            $value = date("d.m.Y", strtotime("Thursday"));
             break;
         case "пятница":
-            $value = date("d/m/Y", strtotime("Friday"));
+            $value = date("d.m.Y", strtotime("Friday"));
             break;
         case "суббота":
-            $value = date("d/m/Y", strtotime("Saturday"));
+            $value = date("d.m.Y", strtotime("Saturday"));
             break;
     }
 
     return $value;
-}
-
-/**
- * Метод, который получает значение ДАТЫ и выводит формат ДАТЫ
- * @param $value // значение
- * @return string
- */
-function getDateFormat($value) {
-    // формат по умолчанию
-    $format = "d/m/Y";
-
-    switch (true) {
-        case strpos($value, "/"):
-            $format = "d/m/Y";
-            break;
-        case strpos($value, "."):
-            $format = "d.m.Y";
-            break;
-        case strpos($value, "-"):
-            $format = "d-m-Y";
-            break;
-    }
-
-    return $format;
 }
 
 /**
@@ -217,6 +193,9 @@ function getDateValConversion($value) {
     $value = strtolower($value);
     // убираю лишние пробелы и избавляюсь от 'в', так как пользователь может его ввести
     $value = preg_replace(["/  +/", "/ в /"]," ", $value);
+    // привожу все значения к одному формату
+    $value = preg_replace(["/-/", "/\//"],".", $value);
+    var_dump($value);
     // разбиваю строку на пробелы
     $value = explode(" ", $value);
 
@@ -250,9 +229,9 @@ function getDateTimeFormat($value) {
     $format = null;
 
     if (count($value) === 2) {
-        $format = getDateFormat(getDateDay($value[0]))." "."H:i";
+        $format = "d.m.Y H:i";
     } else if (count($value) === 1){
-        $format = getDateFormat(getDateDay($value[0]));
+        $format = "d.m.Y";
     }
 
     return $format;

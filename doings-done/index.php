@@ -81,7 +81,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             switch ($key) {
                 case "date_complete":
                     $date_value = getDateTimeValue($value);
-                    var_dump(date("Y.m.d H:i", strtotime($date_value)));
                     $date_format = getDateTimeFormat($value);
                     $result = validateDate($date_value, $date_format);
                     break;
@@ -116,12 +115,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             // если ошибок нет, то добавляем эту задачу в список задач(первым)
             if (!count($errors)) {
+                // приводим введенную дату в нужный вид для БД
+                $date_complete = date("Y.m.d H:i", strtotime(getDateTimeValue($date_complete)));
                 insertData($link, "tasks", [
                     "name" => $name,
                     "date_complete" => $date_complete,
                     "project_id" => $project_id
                 ]);
-//                header("Location: index.php");
+                header("Location: index.php");
             }
             break;
         case "Войти":
