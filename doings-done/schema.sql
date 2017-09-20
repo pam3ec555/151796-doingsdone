@@ -15,7 +15,8 @@ CREATE TABLE tasks (
   file CHAR,
   deadline DATETIME,
   project_id INT,
-  author_id INT
+  author_id INT,
+  is_complete BOOL
 );
 
 CREATE TABLE users (

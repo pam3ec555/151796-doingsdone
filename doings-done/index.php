@@ -17,19 +17,18 @@ if (isset($_GET["logout"])) {
 if (isset($_GET["inset"])) {
     // фильтрация параметра inset
     $project_inset = filter_var($_GET["inset"], FILTER_VALIDATE_INT, ["options" => [
-        "min_range" => 0,
+        "min_range" => -1,
         "max_range" => count($projects) - 1
     ]]);
 
     if ($project_inset || $project_inset === 0) {
-        $project_name = $projects[$project_inset]["name"];
+        $project_id = $projects[$project_inset]["id"];
     } else {
         // возвращаем ошибку 404 если параметр inset имеет несуществующее значение
         return http_response_code(404);
     }
 } else {
-    $project_name = $projects[0]["name"];
-    $project_inset = 0;
+    $project_inset = -1;
 }
 
 // проверка на параметр логин
@@ -173,7 +172,7 @@ renderTemplate(
         "add_task" => $add_task,
         "errors" => $errors,
         "project_inset" => $project_inset,
-        "project_name" => $project_name,
+        "project_id" => $project_id,
         "login" => $login,
         "wrongs" => $wrongs,
         "show_complete_tasks" => $show_complete_tasks

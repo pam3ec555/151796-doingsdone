@@ -18,4 +18,4 @@ $users = selectData($link, "SELECT * FROM users");
 // массив проектов, взятый из БД
 $projects = selectData($link, "SELECT * FROM projects");
 
-$tasks = selectData($link, "SELECT * FROM tasks");
+//$tasks = selectData($link, "SELECT * FROM tasks WHERE author_id = " . $_SESSION["user"]["id"]);
