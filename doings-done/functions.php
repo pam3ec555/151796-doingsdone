@@ -1,90 +1,90 @@
 <?php
 
-// показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
-
-// устанавливаем часовой пояс в Московское время
-date_default_timezone_set("Europe/Moscow");
-
-$SECONDS_PER_DAY = 86400;
-$days = rand(-3, 3);
-$task_deadline_ts = strtotime("+" . $days . " day midnight"); // метка времени даты выполнения задачи
-$current_ts = strtotime("now midnight"); // текущая метка времени
-
-// запишите сюда дату выполнения задачи в формате дд.мм.гггг
-$date_deadline = date("d.m.Y", $task_deadline_ts);
-// в эту переменную запишите кол-во дней до даты задачи
-$days_until_deadline = floor(($task_deadline_ts - $current_ts) / $SECONDS_PER_DAY);
-// переменная заголовка страницы
-$title = "Главная";
-
-// массив с проектами
-$projects = [
-    [
-        "name" => "Все",
-        "link" => "index.php"
-    ],
-    [
-        "name" => "Входящие",
-        "link" => "index.php"
-    ],
-    [
-        "name" => "Учеба",
-        "link" => "index.php"
-    ],
-    [
-        "name" => "Работа",
-        "link" => "index.php"
-    ],
-    [
-        "name" => "Домашние дела",
-        "link" => "index.php"
-    ],
-    [
-        "name" => "Авто",
-        "link" => "index.php"
-    ]
-];
-
-// двумерный массив с задачами
-$tasks = [
-    [
-        "task" => "Собеседование в IT компании",
-        "date_of_complete" => "01.06.2018",
-        "category" => "Работа",
-        "is_compete" => false
-    ],
-    [
-        "task" => "Выполнить тестовое задание",
-        "date_of_complete" => "25.05.2018",
-        "category" => "Работа",
-        "is_complete" => false
-    ],
-    [
-        "task" => "Сделать задание первого раздела",
-        "date_of_complete" => "21.04.2018",
-        "category" => "Учеба",
-        "is_complete" => true
-    ],
-    [
-        "task" => "Встреча с другом",
-        "date_of_complete" => "22.04.2018",
-        "category" => "Входящие",
-        "is_complete" => false
-    ],
-    [
-        "task" => "Купить корм для кота",
-        "date_of_complete" => "Нет",
-        "category" => "Домашние дела",
-        "is_complete" => false
-    ],
-    [
-        "task" => "Заказать пиццу",
-        "date_of_complete" => "Нет",
-        "category" => "Домашние дела",
-        "is_complete" => false
-    ]
-];
+//// показывать или нет выполненные задачи
+//$show_complete_tasks = rand(0, 1);
+//
+//// устанавливаем часовой пояс в Московское время
+//date_default_timezone_set("Europe/Moscow");
+//
+//$SECONDS_PER_DAY = 86400;
+//$days = rand(-3, 3);
+//$task_deadline_ts = strtotime("+" . $days . " day midnight"); // метка времени даты выполнения задачи
+//$current_ts = strtotime("now midnight"); // текущая метка времени
+//
+//// запишите сюда дату выполнения задачи в формате дд.мм.гггг
+//$date_deadline = date("d.m.Y", $task_deadline_ts);
+//// в эту переменную запишите кол-во дней до даты задачи
+//$days_until_deadline = floor(($task_deadline_ts - $current_ts) / $SECONDS_PER_DAY);
+//// переменная заголовка страницы
+//$title = "Главная";
+//
+//// массив с проектами
+//$projects = [
+//    [
+//        "name" => "Все",
+//        "link" => "index.php"
+//    ],
+//    [
+//        "name" => "Входящие",
+//        "link" => "index.php"
+//    ],
+//    [
+//        "name" => "Учеба",
+//        "link" => "index.php"
+//    ],
+//    [
+//        "name" => "Работа",
+//        "link" => "index.php"
+//    ],
+//    [
+//        "name" => "Домашние дела",
+//        "link" => "index.php"
+//    ],
+//    [
+//        "name" => "Авто",
+//        "link" => "index.php"
+//    ]
+//];
+//
+//// двумерный массив с задачами
+//$tasks = [
+//    [
+//        "task" => "Собеседование в IT компании",
+//        "date_of_complete" => "01.06.2018",
+//        "category" => "Работа",
+//        "is_compete" => false
+//    ],
+//    [
+//        "task" => "Выполнить тестовое задание",
+//        "date_of_complete" => "25.05.2018",
+//        "category" => "Работа",
+//        "is_complete" => false
+//    ],
+//    [
+//        "task" => "Сделать задание первого раздела",
+//        "date_of_complete" => "21.04.2018",
+//        "category" => "Учеба",
+//        "is_complete" => true
+//    ],
+//    [
+//        "task" => "Встреча с другом",
+//        "date_of_complete" => "22.04.2018",
+//        "category" => "Входящие",
+//        "is_complete" => false
+//    ],
+//    [
+//        "task" => "Купить корм для кота",
+//        "date_of_complete" => "Нет",
+//        "category" => "Домашние дела",
+//        "is_complete" => false
+//    ],
+//    [
+//        "task" => "Заказать пиццу",
+//        "date_of_complete" => "Нет",
+//        "category" => "Домашние дела",
+//        "is_complete" => false
+//    ]
+//];
 
 /**
  * Метод задающий кол-во проектов определенного типа
@@ -247,6 +247,7 @@ function getDateTimeValue($value) {
  */
 function getDateTimeFormat($value) {
     $value = getDateValConversion($value);
+    $format = null;
 
     if (count($value) === 2) {
         $format = getDateFormat(getDateDay($value[0]))." "."H:i";
@@ -300,7 +301,7 @@ function searchUserByEmail($email, $users) {
  * Метод, для получения данных, возвращающий массив данных из БД
  * @param $link // ресурс соединения
  * @param $sql // SQL-запрос с плейсхолдерами (знаками ?) на всех переменных значений
- * @param array $data
+ * @param array $data // [необязательный аргумент] простой массив со всеми значениями для запроса.
  * @return array // массив данных из БД
  */
 function selectData($link, $sql, $data = []) {

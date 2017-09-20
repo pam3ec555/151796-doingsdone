@@ -1,6 +1,5 @@
 <?php
 
-require_once ("userdata.php");
 require_once ("functions.php");
 require_once ("mysql_helper.php");
 require_once ("init.php");
@@ -34,18 +33,10 @@ if (isset($_GET["inset"])) {
 }
 
 // проверка на параметр логин
-if (isset($_GET["login"])) {
-    $login = true;
-} else {
-    $login = false;
-}
+$login = isset($_GET["login"]) ? true : false;
 
 // переменная проверяющая, есть ли параметр `add`
-if (isset($_GET["add"])) {
-    $add_task = true;
-} else {
-    $add_task = false;
-}
+$add_task = isset($_GET["add_task"]) ? true : false;
 
 // проверка на галочку(показывать выполненные задания)
 if (isset($_GET["show_completed"])) {
@@ -66,7 +57,7 @@ $wrongs = [];
 $required = ["name", "project", "date", "email", "password"];
 
 // массив требований для правильности заполнений
-$rules = ["date", "email"];
+$rules = ["date_complete", "email"];
 
 // массив ошибочных полей при отправки пользователем формы
 $errors = [];
@@ -75,8 +66,6 @@ $errors = [];
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     foreach ($_POST as $key => $value) {
-        // безопастность введенных данных пользователя от html тегов
-        $value = htmlspecialchars($value);
 
         // если поле обязательное для заполнения и оно пустое или заполнено только пробелами
         if ((in_array($key, $required) && $value === "") || (in_array($key, $required) && !(trim($value)))) {
@@ -86,10 +75,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // если поле требует проверки на правильность заполнения
         if  (in_array($key, $rules)) {
+            $result = null;
+
             // проверяем тип поля
             switch ($key) {
-                case "date":
+                case "date_complete":
                     $date_value = getDateTimeValue($value);
+                    var_dump(date("Y.m.d H:i", strtotime($date_value)));
                     $date_format = getDateTimeFormat($value);
                     $result = validateDate($date_value, $date_format);
                     break;
@@ -117,21 +109,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // проверяем, какая форма отправилась
     switch ($_POST["submit"]) {
-        case "add-task":
-            //если есть ошибки, то не закрываем форму
-            if (count($errors)) {
-                $add_task = true;
-            } else {
-                // если ошибок нет, то добавляем эту задачу в список задач(первым)
-                array_unshift($tasks, [
-                    "task" => $_POST["name"],
-                    "date_of_complete" => $_POST["date"],
-                    "category" => $_POST["project"],
-                    "is_complete" => false
+        case "Добавить задачу":
+            $name = $_POST["name"];
+            $date_complete = $_POST["date_complete"];
+            $project_id = $_POST["project"];
+
+            // если ошибок нет, то добавляем эту задачу в список задач(первым)
+            if (!count($errors)) {
+                insertData($link, "tasks", [
+                    "name" => $name,
+                    "date_complete" => $date_complete,
+                    "project_id" => $project_id
                 ]);
+//                header("Location: index.php");
             }
             break;
-        case "login":
+        case "Войти":
             $email = $_POST["email"];
             $password = $_POST["password"];
 
@@ -149,11 +142,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $wrongs[] = "email";
             }
 
-            // если есть ошибки, то оставляем pop-up и предлагаем исправить ошибки
-            if (count($errors) || count($wrongs)) {
-                $login = true;
-            }
             break;
+        case "Зарегистрироваться":
+            $email = $_POST["email"];
+            $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+            $name = $_POST["name"];
+
+            if (!searchUserByEmail($email, $users)) {
+                if (!$errors) {
+                    insertData($link, "users", [
+                        "email" => $email,
+                        "password" => $password,
+                        "name" => $name
+                    ]);
+                    header("Location: index.php");
+                }
+            } else {
+                $wrongs[] = "email";
+            }
     }
 }
 

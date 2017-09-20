@@ -11,3 +11,9 @@ if (!$link) {
     ]);
     exit();
 }
+
+// массив пользователей взятый из БД
+$users = selectData($link, "SELECT * FROM users");
+
+// массив проектов, взятый из БД
+$projects = selectData($link, "SELECT * FROM projects");
