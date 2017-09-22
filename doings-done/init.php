@@ -19,4 +19,4 @@ $users = selectData($link, "SELECT * FROM users");
 $projects = selectData($link, "SELECT * FROM projects");
 
 // массив задач конкретного пользователя взятый из БД
-$tasks = selectData($link, "SELECT * FROM tasks WHERE author_id = " . $_SESSION["user"]["id"]);
+$tasks = selectData($link, "SELECT * FROM tasks WHERE author_id = " . $_SESSION["user"]["id"] . " AND is_delete = 0");

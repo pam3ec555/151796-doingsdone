@@ -56,7 +56,7 @@ $wrongs = [];
 $required = ["name", "project", "date", "email", "password"];
 
 // массив требований для правильности заполнений
-$rules = ["date_complete", "email"];
+$rules = ["date_complete", "email", "project"];
 
 // массив ошибочных полей при отправки пользователем формы
 $errors = [];
@@ -86,6 +86,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 case "email":
                     $result = validateEmail($value);
                     break;
+                case "project":
+                    $result = getProjectsId($value, $projects);
+                    break;
             }
 
             // если поле заполнено правильно
@@ -110,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         case "Добавить задачу":
             $name = $_POST["name"];
             $date_complete = $_POST["date_complete"];
-            $project_id = $_POST["project"];
+            $project_id = getProjectsId($_POST["project"], $projects);
 
             // если ошибок нет, то добавляем эту задачу в список задач(первым)
             if (!count($errors)) {
@@ -120,7 +123,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     "name" => $name,
                     "date_complete" => $date_complete,
                     "project_id" => $project_id,
-                    "author_id" => $_SESSION["user"]["id"]
+                    "author_id" => $_SESSION["user"]["id"],
+                    "is_complete" => 0,
+                    "is_delete" => 0
                 ]);
                 header("Location: index.php");
             }

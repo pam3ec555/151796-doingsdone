@@ -36,7 +36,7 @@ $project = $_POST["project"] ?? "";
                     <?php if (in_array("project", $errors)): ?>form__input--error<?php endif; ?>"
                     name="project" id="project" required>
                 <?php foreach ($projects as $key => $value): ?>
-                    <option value="<?=$value["id"]?>"
+                    <option value="<?=$value["project"]?>"
                         <?php if ($project === $value["project"]): ?>
                             selected
                         <?php endif; ?>

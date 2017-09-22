@@ -100,12 +100,11 @@ function getDateValConversion($value) {
     // убираю внешние пробелы
     $value = trim($value);
     // приравниваю строку к нижнему регистру
-    $value = strtolower($value);
+    $value = mb_convert_case($value, MB_CASE_LOWER, "UTF-8");
     // убираю лишние пробелы и избавляюсь от 'в', так как пользователь может его ввести
     $value = preg_replace(["/  +/", "/ в /"]," ", $value);
     // привожу все значения к одному формату
     $value = preg_replace(["/-/", "/\//"],".", $value);
-    var_dump($value);
     // разбиваю строку на пробелы
     $value = explode(" ", $value);
 
@@ -250,6 +249,24 @@ function insertData($link, $table, $data) {
 function execQuery($link, $sql, $data = []) {
     $stmt = db_get_prepare_stmt($link, $sql, $data);
     $result = mysqli_stmt_execute($stmt);
+
+    return $result;
+}
+
+/**
+ * Метод, проверяющий существования проекта в БД и возвращающий его id
+ * @param $project // выбранный/введенный проект
+ * @param $projects // массив проектов
+ * @return null|int // id проекта
+ */
+function getProjectsId($project, $projects) {
+    $result = null;
+
+    foreach ($projects as $key => $value) {
+        if ($project === $value["project"]) {
+            $result = $value["id"];
+        }
+    }
 
     return $result;
 }

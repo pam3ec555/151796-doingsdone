@@ -43,10 +43,11 @@
                      ((!$value["is_complete"] && $show_complete_tasks == 0) || $show_complete_tasks == 1)
                  ):
         ?>
-        <tr class="tasks__item <?php if ($value["is_complete"] == true): ?>task--completed<?php endif; ?>">
+        <tr class="tasks__item <?php if ($value["is_complete"] === true): ?>task--completed<?php endif; ?>">
           <td class="task__select">
             <label class="checkbox task__checkbox">
-              <input class="checkbox__input visually-hidden" type="checkbox" checked>
+              <input class="checkbox__input visually-hidden" type="checkbox"
+                     <?php if ($value["is_complete"] === true): ?>checked<?php endif; ?>>
               <span class="checkbox__text"><?=$value["name"]; ?></span>
             </label>
           </td>

@@ -16,7 +16,8 @@ CREATE TABLE tasks (
   deadline DATETIME,
   project_id INT,
   author_id INT,
-  is_complete BOOL
+  is_complete BOOLEAN,
+  is_delete BOOLEAN
 );
 
 CREATE TABLE users (
