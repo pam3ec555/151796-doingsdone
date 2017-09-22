@@ -1,10 +1,10 @@
 <?php
 
+session_start();
+
 require_once ("functions.php");
 require_once ("mysql_helper.php");
 require_once ("init.php");
-
-session_start();
 
 // проверка на параметр logout, если true, то нужно разлогинить пользователя
 if (isset($_GET["logout"])) {
@@ -119,7 +119,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 insertData($link, "tasks", [
                     "name" => $name,
                     "date_complete" => $date_complete,
-                    "project_id" => $project_id
+                    "project_id" => $project_id,
+                    "author_id" => $_SESSION["user"]["id"]
                 ]);
                 header("Location: index.php");
             }
@@ -153,7 +154,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     insertData($link, "users", [
                         "email" => $email,
                         "password" => $password,
-                        "name" => $name
+                        "name" => $name,
+                        "date_of_registration" => date("Y.m.d")
                     ]);
                     header("Location: index.php");
                 }

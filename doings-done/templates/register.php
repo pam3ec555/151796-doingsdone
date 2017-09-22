@@ -1,6 +1,9 @@
 <?php
 
+// e-mail пользователя отправленный на сервер
 $email = $_POST["email"] ?? "";
+
+// имя пользователя отправленный на сервер
 $name = $_POST["name"] ?? "";
 
 ?>
@@ -9,7 +12,7 @@ $name = $_POST["name"] ?? "";
 <section class="content__side">
     <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
 
-    <a class="button button--transparent content__side-button" href="#">Войти</a>
+    <a class="button button--transparent content__side-button" href="?login">Войти</a>
 </section>
 
 <main class="content__main">

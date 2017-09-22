@@ -12,7 +12,6 @@
 
 
 <h1 class="visually-hidden">Дела в порядке</h1>
-<?=print($_SESSION["user"]["id"]);?>
 <div class="page-wrapper">
     <div class="container <?php if (isset($_SESSION["user"]) || isset($_GET["register"])): ?>container--with-sidebar<?php endif; ?>">
         <header class="main-header">
