@@ -53,7 +53,7 @@ if (isset($_GET["show_completed"])) {
 $wrongs = [];
 
 // массив обязательных для заполнения полей
-$required = ["name", "project", "date", "email", "password"];
+$required = ["name", "project", "date_complete", "email", "password"];
 
 // массив требований для правильности заполнений
 $rules = ["date_complete", "email", "project"];
