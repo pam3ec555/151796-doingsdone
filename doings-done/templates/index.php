@@ -48,7 +48,7 @@
             <label class="checkbox task__checkbox">
               <input class="checkbox__input visually-hidden" type="checkbox"
                      <?php if ($value["is_complete"] === true): ?>checked<?php endif; ?>>
-              <span class="checkbox__text"><?=$value["name"]; ?></span>
+              <span class="checkbox__text"><?=htmlspecialchars($value["name"]); ?></span>
             </label>
           </td>
           <td class="task__date"><?=date("d.m.Y", strtotime($value["date_complete"])); ?></td>

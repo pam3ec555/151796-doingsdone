@@ -271,3 +271,31 @@ function getProjectsId($project, $projects) {
     return $result;
 }
 
+/**
+ * Метод, принимающий дату дедлайна задания и возвращающий время(относительно текущего времени), когда дедлайн
+ * @param $date // дедлайн задания
+ * @return string // когда дедлайн
+ */
+function getTaskDate($date) {
+    $date = strtotime($date);
+
+    // сегодня
+    $date_now = strtotime(date("d.m.Y"));
+    $result = null;
+
+    // кол-во секунд в сутках
+    $day = 86400;
+
+    if (($date - $date_now) < $day && ($date - $date_now) > 0) {
+        $result = "today";
+    } else if (($date - $date_now) > $day && ($date - $date_now) < ($day * 2)) {
+        $result = "tomorrow";
+    } else if (($date - $date_now) < 0) {
+        $result = "past";
+    } else {
+        $result = "future";
+    }
+
+    return $date;
+}
+
