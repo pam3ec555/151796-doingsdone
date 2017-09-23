@@ -30,7 +30,7 @@
                         </li>
                         <?php foreach ($projects as $key => $value): ?>
                           <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link <?php if ($key=== $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?="index.php?inset=" . $key; ?>"><?=$value["project"]; ?></a>
+                            <a class="main-navigation__list-item-link <?php if ($key=== $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?="index.php?inset=" . $key; ?>"><?=htmlspecialchars($value["project"]); ?></a>
                             <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value["id"])) ?></span>
                           </li>
                         <?php endforeach; ?>
@@ -46,7 +46,8 @@
                             "projects" => $projects,
                             "project_inset" => $project_inset,
                             "project_id" => $project_id,
-                            "show_complete_tasks" => $show_complete_tasks
+                            "show_complete_tasks" => $show_complete_tasks,
+                            "task_date" => $task_date
                         ]);
                     ?>
                 </main>

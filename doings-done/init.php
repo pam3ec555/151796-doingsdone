@@ -20,6 +20,3 @@ $projects = selectData($link, "SELECT * FROM projects");
 
 // массив задач конкретного пользователя взятый из БД
 $tasks = selectData($link, "SELECT * FROM tasks WHERE author_id = " . $_SESSION["user"]["id"] . " AND is_delete = 0");
-
-$test = getTaskDate("23.09.2017");
-print $test;

@@ -277,25 +277,23 @@ function getProjectsId($project, $projects) {
  * @return string // когда дедлайн
  */
 function getTaskDate($date) {
-    $date = strtotime($date);
-
-    // сегодня
-    $date_now = strtotime(date("d.m.Y"));
     $result = null;
+    $date = strtotime($date);
+    $date_now = strtotime('now midnight');
 
     // кол-во секунд в сутках
     $day = 86400;
 
-    if (($date - $date_now) < $day && ($date - $date_now) > 0) {
+    if ($date === $date_now) {
         $result = "today";
-    } else if (($date - $date_now) > $day && ($date - $date_now) < ($day * 2)) {
+    } else if ($date - $date_now === $day) {
         $result = "tomorrow";
-    } else if (($date - $date_now) < 0) {
+    } else if ($date < $date_now) {
         $result = "past";
     } else {
-        $result = "future";
+        $result = "all";
     }
 
-    return $date;
+    return $result;
 }
 

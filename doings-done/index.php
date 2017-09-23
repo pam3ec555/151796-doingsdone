@@ -13,6 +13,20 @@ if (isset($_GET["logout"])) {
     header("index.php");
 }
 
+if (isset($_GET["task_date"])) {
+    $task_dates = [
+        "today", "tomorrow", "past", "all"
+    ];
+
+    if (in_array($_GET["task_date"], $task_dates)) {
+        $task_date = $_GET["task_date"];
+    } else {
+        return http_response_code(404);
+    }
+} else {
+    $task_date = "all";
+}
+
 // проверка на параметр запроса
 if (isset($_GET["inset"])) {
     // фильтрация параметра inset
@@ -182,7 +196,8 @@ renderTemplate(
         "project_id" => $project_id,
         "login" => $login,
         "wrongs" => $wrongs,
-        "show_complete_tasks" => $show_complete_tasks
+        "show_complete_tasks" => $show_complete_tasks,
+        "task_date" => $task_date
     ]
 );
 

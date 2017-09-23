@@ -17,13 +17,24 @@ document.body.addEventListener('click', hidePopups, true);
   });
 });
 
-var $checkbox = document.getElementsByClassName('checkbox__input')[0];
+var checkbox = document.getElementsByClassName('checkbox__input')[0];
 
-if ($checkbox) {
-    $checkbox.addEventListener('change', function(event) {
+if (checkbox) {
+    checkbox.addEventListener('change', function(event) {
         var is_checked = +event.target.checked;
 
         window.location = dir + '/index.php?show_completed=' + is_checked;
 
     });
 }
+
+var taskControls = document.querySelector('.radio-button-group');
+
+taskControls.addEventListener('click', function (e) {
+    var target = e.target;
+
+    if (target.classList.contains('radio-button__input') && target.nodeName === 'INPUT') {
+        var value = target.getAttribute('value');
+        window.location = dir + '?task_date=' + value;
+    }
+});
