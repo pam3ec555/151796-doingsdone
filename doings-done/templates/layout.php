@@ -8,13 +8,12 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="<?php if ($add_task|| $login): ?>overlay<?php endif; ?> <?php if (!isset($_SESSION["user"])): ?>body-background<?php endif; ?>">
+<body class="<?php if ($add_task || $login): ?>overlay<?php endif; ?> <?php if (!isset($_SESSION["user"]) && !isset($_GET["register"])): ?>body-background<?php endif; ?>">
 
 
 <h1 class="visually-hidden">Дела в порядке</h1>
-
 <div class="page-wrapper">
-    <div class="container <?php if (isset($_SESSION["user"])): ?>container--with-sidebar<?php endif; ?>">
+    <div class="container <?php if (isset($_SESSION["user"]) || isset($_GET["register"])): ?>container--with-sidebar<?php endif; ?>">
         <header class="main-header">
             <?=renderTemplate("templates/header.php", ["login" => $login]); ?>
         </header>
@@ -25,10 +24,14 @@
                     <h2 class="content__side-heading">Проекты</h2>
                   <nav class="main-navigation">
                     <ul class="main-navigation__list">
+                        <li class="main-navigation__list-item">
+                            <a class="main-navigation__list-item-link <?php if ($project_inset === -1): ?>main-navigation__list-item--active<?php endif; ?>" href="<?="index.php?inset=" . -1; ?>">Все</a>
+                            <span class="main-navigation__list-item-count"><?php print(count($tasks)); ?></span>
+                        </li>
                         <?php foreach ($projects as $key => $value): ?>
                           <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link <?php if ($key === $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?=$value["link"] . "?inset=" . $key; ?>"><?=$value["name"]; ?></a>
-                            <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value["name"])) ?></span>
+                            <a class="main-navigation__list-item-link <?php if ($key=== $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?="index.php?inset=" . $key; ?>"><?=$value["project"]; ?></a>
+                            <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value["id"])) ?></span>
                           </li>
                         <?php endforeach; ?>
                     </ul>
@@ -42,11 +45,17 @@
                             "tasks" => $tasks,
                             "projects" => $projects,
                             "project_inset" => $project_inset,
-                            "project_name" => $project_name,
+                            "project_id" => $project_id,
                             "show_complete_tasks" => $show_complete_tasks
                         ]);
                     ?>
                 </main>
+            <?php elseif (isset($_GET["register"])):
+                renderTemplate("templates/register.php", [
+                    "errors" => $errors,
+                    "wrongs" => $wrongs
+                ]);
+            ?>
             <?php else:
                 renderTemplate("templates/guest.php");
             endif; ?>
@@ -61,7 +70,7 @@
 
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
-        <a href="?add" class="main-footer__button button button--plus">Добавить задачу</a>
+        <a href="?add_task" class="main-footer__button button button--plus">Добавить задачу</a>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>
@@ -94,7 +103,8 @@
 
 <?php if ($add_task) renderTemplate("templates/add-task.php",
     [
-        "errors" => $errors
+        "errors" => $errors,
+        "projects" => $projects
     ]);
 ?>
 

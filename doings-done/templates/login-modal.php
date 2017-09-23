@@ -9,7 +9,7 @@ $email = $_POST["email"] ?? "";
 
     <h2 class="modal__heading">Вход на сайт</h2>
 
-    <form class="form" class="" action="index.php" method="POST">
+    <form class="form" class="" action="index.php?login" method="POST">
         <div class="form__row">
             <label class="form__label" for="email">E-mail <sup>*</sup></label>
 
@@ -50,7 +50,7 @@ $email = $_POST["email"] ?? "";
         </div>
 
         <div class="form__row form__row--controls">
-            <input class="button" type="submit" name="submit" value="login">
+            <input class="button" type="submit" name="submit" value="Войти">
         </div>
     </form>
 </div>

@@ -1,109 +1,19 @@
 <?php
 
-// показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
-
-// устанавливаем часовой пояс в Московское время
-date_default_timezone_set("Europe/Moscow");
-
-$SECONDS_PER_DAY = 86400;
-$days = rand(-3, 3);
-$task_deadline_ts = strtotime("+" . $days . " day midnight"); // метка времени даты выполнения задачи
-$current_ts = strtotime("now midnight"); // текущая метка времени
-
-// запишите сюда дату выполнения задачи в формате дд.мм.гггг
-$date_deadline = date("d.m.Y", $task_deadline_ts);
-// в эту переменную запишите кол-во дней до даты задачи
-$days_until_deadline = floor(($task_deadline_ts - $current_ts) / $SECONDS_PER_DAY);
-// переменная заголовка страницы
-$title = "Главная";
-
-// массив с проектами
-$projects = [
-    [
-        "name" => "Все",
-        "link" => "index.php"
-    ],
-    [
-        "name" => "Входящие",
-        "link" => "index.php"
-    ],
-    [
-        "name" => "Учеба",
-        "link" => "index.php"
-    ],
-    [
-        "name" => "Работа",
-        "link" => "index.php"
-    ],
-    [
-        "name" => "Домашние дела",
-        "link" => "index.php"
-    ],
-    [
-        "name" => "Авто",
-        "link" => "index.php"
-    ]
-];
-
-// двумерный массив с задачами
-$tasks = [
-    [
-        "task" => "Собеседование в IT компании",
-        "date_of_complete" => "01.06.2018",
-        "category" => "Работа",
-        "is_compete" => false
-    ],
-    [
-        "task" => "Выполнить тестовое задание",
-        "date_of_complete" => "25.05.2018",
-        "category" => "Работа",
-        "is_complete" => false
-    ],
-    [
-        "task" => "Сделать задание первого раздела",
-        "date_of_complete" => "21.04.2018",
-        "category" => "Учеба",
-        "is_complete" => true
-    ],
-    [
-        "task" => "Встреча с другом",
-        "date_of_complete" => "22.04.2018",
-        "category" => "Входящие",
-        "is_complete" => false
-    ],
-    [
-        "task" => "Купить корм для кота",
-        "date_of_complete" => "Нет",
-        "category" => "Домашние дела",
-        "is_complete" => false
-    ],
-    [
-        "task" => "Заказать пиццу",
-        "date_of_complete" => "Нет",
-        "category" => "Домашние дела",
-        "is_complete" => false
-    ]
-];
-
 /**
  * Метод задающий кол-во проектов определенного типа
  * @param $tasks // Массив с задачами
  * @param $name_of_project // Имя проекта
  * @return int // Кол-во проектов определенного типа
  */
-function setProjectsCount($tasks, $name_of_project) {
+function setProjectsCount($tasks, $project_id) {
     // Счетчик
     $count = 0;
 
-    // Проверка на имя проекта, если все, то просто выводим длинну массива с задачами
-    if ($name_of_project == "Все") {
-        $count = count($tasks);
-    } else {
-        // Перебираем массив и находим кол-во проектов определенной категории
-        foreach ($tasks as $key => $value) {
-            if ($value["category"] == $name_of_project)
-                $count++;
+    // Перебираем массив и находим кол-во проектов определенной категории
+    foreach ($tasks as $key => $value) {
+        if ($value["project_id"] == $project_id) {
+            $count++;
         }
     }
 
@@ -147,62 +57,38 @@ function getDateDay($value) {
 
     switch ($value) {
         case "сегодня":
-            $value = date("d/m/Y");
+            $value = date("d.m.Y");
             break;
         case "завтра":
-            $value = date("d/m/Y", strtotime("+1 day"));
+            $value = date("d.m.Y", strtotime("+1 day"));
             break;
         case "послезавтра":
-            $value = date("d/m/Y", strtotime("+2 day"));
+            $value = date("d.m.Y", strtotime("+2 day"));
             break;
         case "воскресение":
-            $value = date("d/m/Y", strtotime("Sunday"));
+            $value = date("d.m.Y", strtotime("Sunday"));
             break;
         case "понедельник":
-            $value = date("d/m/Y", strtotime("Monday"));
+            $value = date("d.m.Y", strtotime("Monday"));
             break;
         case "вторник":
-            $value = date("d/m/Y", strtotime("Tuesday"));
+            $value = date("d.m.Y", strtotime("Tuesday"));
             break;
         case "среда":
-            $value = date("d/m/Y", strtotime("Wednesday"));
+            $value = date("d.m.Y", strtotime("Wednesday"));
             break;
         case "четверг":
-            $value = date("d/m/Y", strtotime("Thursday"));
+            $value = date("d.m.Y", strtotime("Thursday"));
             break;
         case "пятница":
-            $value = date("d/m/Y", strtotime("Friday"));
+            $value = date("d.m.Y", strtotime("Friday"));
             break;
         case "суббота":
-            $value = date("d/m/Y", strtotime("Saturday"));
+            $value = date("d.m.Y", strtotime("Saturday"));
             break;
     }
 
     return $value;
-}
-
-/**
- * Метод, который получает значение ДАТЫ и выводит формат ДАТЫ
- * @param $value // значение
- * @return string
- */
-function getDateFormat($value) {
-    // формат по умолчанию
-    $format = "d/m/Y";
-
-    switch (true) {
-        case strpos($value, "/"):
-            $format = "d/m/Y";
-            break;
-        case strpos($value, "."):
-            $format = "d.m.Y";
-            break;
-        case strpos($value, "-"):
-            $format = "d-m-Y";
-            break;
-    }
-
-    return $format;
 }
 
 /**
@@ -214,9 +100,11 @@ function getDateValConversion($value) {
     // убираю внешние пробелы
     $value = trim($value);
     // приравниваю строку к нижнему регистру
-    $value = strtolower($value);
+    $value = mb_convert_case($value, MB_CASE_LOWER, "UTF-8");
     // убираю лишние пробелы и избавляюсь от 'в', так как пользователь может его ввести
     $value = preg_replace(["/  +/", "/ в /"]," ", $value);
+    // привожу все значения к одному формату
+    $value = preg_replace(["/-/", "/\//"],".", $value);
     // разбиваю строку на пробелы
     $value = explode(" ", $value);
 
@@ -247,11 +135,12 @@ function getDateTimeValue($value) {
  */
 function getDateTimeFormat($value) {
     $value = getDateValConversion($value);
+    $format = null;
 
     if (count($value) === 2) {
-        $format = getDateFormat(getDateDay($value[0]))." "."H:i";
+        $format = "d.m.Y H:i";
     } else if (count($value) === 1){
-        $format = getDateFormat(getDateDay($value[0]));
+        $format = "d.m.Y";
     }
 
     return $format;
@@ -300,7 +189,7 @@ function searchUserByEmail($email, $users) {
  * Метод, для получения данных, возвращающий массив данных из БД
  * @param $link // ресурс соединения
  * @param $sql // SQL-запрос с плейсхолдерами (знаками ?) на всех переменных значений
- * @param array $data
+ * @param array $data // [необязательный аргумент] простой массив со всеми значениями для запроса.
  * @return array // массив данных из БД
  */
 function selectData($link, $sql, $data = []) {
@@ -360,6 +249,24 @@ function insertData($link, $table, $data) {
 function execQuery($link, $sql, $data = []) {
     $stmt = db_get_prepare_stmt($link, $sql, $data);
     $result = mysqli_stmt_execute($stmt);
+
+    return $result;
+}
+
+/**
+ * Метод, проверяющий существования проекта в БД и возвращающий его id
+ * @param $project // выбранный/введенный проект
+ * @param $projects // массив проектов
+ * @return null|int // id проекта
+ */
+function getProjectsId($project, $projects) {
+    $result = null;
+
+    foreach ($projects as $key => $value) {
+        if ($project === $value["project"]) {
+            $result = $value["id"];
+        }
+    }
 
     return $result;
 }

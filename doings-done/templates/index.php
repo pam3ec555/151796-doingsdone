@@ -39,18 +39,19 @@
 <table class="tasks">
     <?php foreach ($tasks as $key => $value): ?>
         <?php if (
-                     ($project_name === $value["category"] || $project_inset === 0) &&
+                     ($project_id === $value["project_id"] || $project_inset === -1) &&
                      ((!$value["is_complete"] && $show_complete_tasks == 0) || $show_complete_tasks == 1)
                  ):
         ?>
-        <tr class="tasks__item <?php if ($value["is_complete"] == true): ?>task--completed<?php endif; ?>">
+        <tr class="tasks__item <?php if ($value["is_complete"] === true): ?>task--completed<?php endif; ?>">
           <td class="task__select">
             <label class="checkbox task__checkbox">
-              <input class="checkbox__input visually-hidden" type="checkbox" checked>
-              <span class="checkbox__text"><?=$value["task"]; ?></span>
+              <input class="checkbox__input visually-hidden" type="checkbox"
+                     <?php if ($value["is_complete"] === true): ?>checked<?php endif; ?>>
+              <span class="checkbox__text"><?=$value["name"]; ?></span>
             </label>
           </td>
-          <td class="task__date"><?=$value["date_of_complete"] ?></td>
+          <td class="task__date"><?=date("d.m.Y", strtotime($value["date_complete"])); ?></td>
           <td class="task__controls"></td>
         </tr>
         <?php endif; ?>

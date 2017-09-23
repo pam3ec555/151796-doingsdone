@@ -16,7 +16,7 @@ $project = $_POST["project"] ?? "";
 
     <h2 class="modal__heading">Добавление задачи</h2>
 
-    <form class="form" action="index.php" method="POST" enctype="multipart/form-data">
+    <form class="form" action="index.php?add_task" method="POST" enctype="multipart/form-data">
         <div class="form__row">
             <label class="form__label" for="name">Название <sup>*</sup></label>
 
@@ -35,7 +35,13 @@ $project = $_POST["project"] ?? "";
             <select class="form__input form__input--select
                     <?php if (in_array("project", $errors)): ?>form__input--error<?php endif; ?>"
                     name="project" id="project" required>
-                <option value="incoming" <?php if ($project === "incoming"): ?>selected<?php endif; ?>>Входящие</option>
+                <?php foreach ($projects as $key => $value): ?>
+                    <option value="<?=$value["project"]?>"
+                        <?php if ($project === $value["project"]): ?>
+                            selected
+                        <?php endif; ?>
+                        ><?=$value["project"]?></option>
+                <?php endforeach;?>
             </select>
             <?php if (in_array("project", $errors)): ?>
                 <span class="form__error">Выберите проект</span>
@@ -47,10 +53,10 @@ $project = $_POST["project"] ?? "";
             <label class="form__label" for="date">Дата выполнения <sup>*</sup></label>
 
             <input class="form__input form__input--date
-                   <?php if (in_array("date", $errors)): ?>form__input--error<?php endif;?>"
-                   type="text" name="date" id="date" value="<?=$date ?>"
+                   <?php if (in_array("date_complete", $errors)): ?>form__input--error<?php endif;?>"
+                   type="text" name="date_complete" id="date" value="<?=$date ?>"
                    placeholder="Введите дату в формате ДД.ММ.ГГГГ" required>
-            <?php if (in_array("date", $errors)): ?>
+            <?php if (in_array("date_complete", $errors)): ?>
                 <span class="form__error">Заполните дату в нужном формате</span>
             <?php endif;?>
         </div>
@@ -68,7 +74,7 @@ $project = $_POST["project"] ?? "";
         </div>
 
         <div class="form__row form__row--controls">
-            <input class="button" type="submit" name="submit" value="add-task">
+            <input class="button" type="submit" name="submit" value="Добавить задачу">
         </div>
     </form>
 </div>

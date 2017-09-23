@@ -4,7 +4,7 @@
 
 <div class="main-header__side">
     <?php if (isset($_SESSION["user"])): ?>
-        <a class="main-header__side-item button button--plus" href="?add">Добавить задачу</a>
+        <a class="main-header__side-item button button--plus" href="?add_task">Добавить задачу</a>
         <div class="main-header__side-item user-menu">
             <div class="user-menu__image">
                 <img src="img/user-pic.jpg" width="40" height="40" alt="Пользователь">
@@ -16,6 +16,8 @@
                 <a href="?logout">Выйти</a>
             </div>
         </div>
+    <?php elseif (isset($_GET["register"])):?>
+    <!-- Ничего не добовляем -->
     <?php else: ?>
         <div class="main-header__side">
             <a class="main-header__side-item button button--transparent" href="?login">Войти</a>
