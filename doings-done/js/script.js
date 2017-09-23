@@ -35,6 +35,6 @@ taskControls.addEventListener('click', function (e) {
 
     if (target.classList.contains('radio-button__input') && target.nodeName === 'INPUT') {
         var value = target.getAttribute('value');
-        window.location = dir + '?task_date=' + value;
+        window.location = dir + '?task_deadline=' + value;
     }
 });

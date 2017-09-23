@@ -47,7 +47,7 @@
                             "project_inset" => $project_inset,
                             "project_id" => $project_id,
                             "show_complete_tasks" => $show_complete_tasks,
-                            "task_date" => $task_date
+                            "task_deadline" => $task_deadline
                         ]);
                     ?>
                 </main>

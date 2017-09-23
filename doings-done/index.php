@@ -13,20 +13,6 @@ if (isset($_GET["logout"])) {
     header("index.php");
 }
 
-if (isset($_GET["task_date"])) {
-    $task_dates = [
-        "today", "tomorrow", "past", "all"
-    ];
-
-    if (in_array($_GET["task_date"], $task_dates)) {
-        $task_date = $_GET["task_date"];
-    } else {
-        return http_response_code(404);
-    }
-} else {
-    $task_date = "all";
-}
-
 // проверка на параметр запроса
 if (isset($_GET["inset"])) {
     // фильтрация параметра inset
@@ -67,10 +53,10 @@ if (isset($_GET["show_completed"])) {
 $wrongs = [];
 
 // массив обязательных для заполнения полей
-$required = ["name", "project", "date_complete", "email", "password"];
+$required = ["name", "project", "deadline", "email", "password"];
 
 // массив требований для правильности заполнений
-$rules = ["date_complete", "email", "project"];
+$rules = ["deadline", "email", "project", "deadline"];
 
 // массив ошибочных полей при отправки пользователем формы
 $errors = [];
@@ -92,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             // проверяем тип поля
             switch ($key) {
-                case "date_complete":
+                case "deadline":
                     $date_value = getDateTimeValue($value);
                     $date_format = getDateTimeFormat($value);
                     $result = validateDate($date_value, $date_format);
@@ -126,16 +112,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     switch ($_POST["submit"]) {
         case "Добавить задачу":
             $name = $_POST["name"];
-            $date_complete = $_POST["date_complete"];
+            $deadline = $_POST["deadline"];
             $project_id = getProjectsId($_POST["project"], $projects);
 
             // если ошибок нет, то добавляем эту задачу в список задач(первым)
             if (!count($errors)) {
                 // приводим введенную дату в нужный вид для БД
-                $date_complete = date("Y.m.d H:i", strtotime(getDateTimeValue($date_complete)));
+                $deadline = date("Y.m.d H:i", strtotime(getDateTimeValue($deadline)));
                 insertData($link, "tasks", [
                     "name" => $name,
-                    "date_complete" => $date_complete,
+                    "deadline" => $deadline,
                     "project_id" => $project_id,
                     "author_id" => $_SESSION["user"]["id"],
                     "is_complete" => 0,
@@ -197,7 +183,7 @@ renderTemplate(
         "login" => $login,
         "wrongs" => $wrongs,
         "show_complete_tasks" => $show_complete_tasks,
-        "task_date" => $task_date
+        "task_deadline" => $task_deadline
     ]
 );
 

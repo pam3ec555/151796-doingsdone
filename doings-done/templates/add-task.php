@@ -53,10 +53,10 @@ $project = $_POST["project"] ?? "";
             <label class="form__label" for="date">Дата выполнения <sup>*</sup></label>
 
             <input class="form__input form__input--date
-                   <?php if (in_array("date_complete", $errors)): ?>form__input--error<?php endif;?>"
-                   type="text" name="date_complete" id="date" value="<?=$date ?>"
+                   <?php if (in_array("deadline", $errors)): ?>form__input--error<?php endif;?>"
+                   type="text" name="deadline" id="date" value="<?=$date ?>"
                    placeholder="Введите дату в формате ДД.ММ.ГГГГ" required>
-            <?php if (in_array("date_complete", $errors)): ?>
+            <?php if (in_array("deadline", $errors)): ?>
                 <span class="form__error">Заполните дату в нужном формате</span>
             <?php endif;?>
         </div>

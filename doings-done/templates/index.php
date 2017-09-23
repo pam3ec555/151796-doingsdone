@@ -10,25 +10,25 @@
     <div class="radio-button-group">
         <label class="radio-button">
             <input class="radio-button__input visually-hidden" type="radio" name="radio" value="all"
-                <?php if ($task_date === "all"): ?>checked<?php endif; ?>>
+                <?php if($task_deadline == "all"): ?>checked<?php endif;?>>
             <span class="radio-button__text">Все задачи</span>
         </label>
 
         <label class="radio-button">
             <input class="radio-button__input visually-hidden" type="radio" name="radio" value="today"
-                   <?php if ($task_date === "today"): ?>checked<?php endif; ?>>
+                <?php if($task_deadline == "today"): ?>checked<?php endif;?>>
             <span class="radio-button__text">Повестка дня</span>
         </label>
 
         <label class="radio-button">
             <input class="radio-button__input visually-hidden" type="radio" name="radio" value="tomorrow"
-                   <?php if ($task_date === "tomorrow"): ?>checked<?php endif; ?>>
+                   <?php if($task_deadline == "tomorrow"): ?>checked<?php endif;?>>
             <span class="radio-button__text">Завтра</span>
         </label>
 
         <label class="radio-button">
             <input class="radio-button__input visually-hidden" type="radio" name="radio" value="past"
-                   <?php if ($task_date === "past"): ?>checked<?php endif; ?>>
+                   <?php if($task_deadline == "past"): ?>checked<?php endif;?>>
             <span class="radio-button__text">Просроченные</span>
         </label>
     </div>
@@ -44,8 +44,7 @@
     <?php foreach ($tasks as $key => $value): ?>
         <?php if (
                      ($project_id === $value["project_id"] || $project_inset === -1) &&
-                     ((!$value["is_complete"] && $show_complete_tasks == 0) || $show_complete_tasks == 1) &&
-                     ($task_date === getTaskDate(date("d.m.Y", strtotime($value["date_complete"]))) || $task_date === "all")
+                     ((!$value["is_complete"] && $show_complete_tasks == 0) || $show_complete_tasks == 1)
                  ):
         ?>
         <tr class="tasks__item <?php if ($value["is_complete"] === true): ?>task--completed<?php endif; ?>">
@@ -56,7 +55,7 @@
               <span class="checkbox__text"><?=htmlspecialchars($value["name"]); ?></span>
             </label>
           </td>
-          <td class="task__date"><?=date("d.m.Y", strtotime($value["date_complete"])); ?></td>
+          <td class="task__date"><?=date("d.m.Y", strtotime($value["deadline"])); ?></td>
           <td class="task__controls"></td>
         </tr>
         <?php endif; ?>
