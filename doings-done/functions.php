@@ -271,3 +271,30 @@ function getProjectsId($project, $projects) {
     return $result;
 }
 
+/**
+ * Метод, прерывающий загрузку страницы, возвращая ошибку 404
+ */
+function pageNotFound() {
+    http_response_code(404);
+    renderTemplate("templates/error.php");
+    exit();
+}
+
+function getTaskDeadline($task_deadline) {
+    $result = "";
+
+    switch ($task_deadline) {
+        case "today":
+            $result = "AND deadline < DATE_SUB(NOW(), INTERVAL 0 DAY) AND deadline > DATE_SUB(NOW(), INTERVAL 1 DAY)";
+            break;
+        case "tomorrow":
+            $result = "AND deadline < DATE_SUB(NOW(), INTERVAL -1 DAY) AND deadline > DATE_SUB(NOW(), INTERVAL 0 DAY)";
+            break;
+        case "past":
+            $result = "AND deadline < DATE_SUB(NOW(), INTERVAL 1 DAY)";
+            break;
+    }
+
+    return $result;
+}
+

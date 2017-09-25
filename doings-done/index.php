@@ -10,8 +10,10 @@ require_once ("init.php");
 if (isset($_GET["logout"])) {
     unset($_SESSION["user"]);
 
-    header("index.php");
+    header("Location: index.php");
 }
+
+$project_inset = -1;
 
 // проверка на параметр запроса
 if (isset($_GET["inset"])) {
@@ -24,39 +26,53 @@ if (isset($_GET["inset"])) {
     if ($project_inset || $project_inset === 0) {
         $project_id = $projects[$project_inset]["id"];
     } else {
-        // возвращаем ошибку 404 если параметр inset имеет несуществующее значение
-        return http_response_code(404);
+        pageNotFound();
     }
-} else {
-    $project_inset = -1;
 }
 
+$title = "Главная";
+
 // проверка на параметр логин
-$login = isset($_GET["login"]) ? true : false;
+$login = null;
+if (isset($_GET["login"])) {
+    $login = true;
+    $title = "Вход";
+} else {
+    $login = false;
+}
 
-// переменная проверяющая, есть ли параметр `add`
-$add_task = isset($_GET["add_task"]) ? true : false;
+// переменная проверяющая, есть ли параметр `add_task`
+$add_task = null;
 
-// проверка на галочку(показывать выполненные задания)
-if (isset($_GET["show_completed"])) {
-    $show_complete_tasks = filter_var($_GET["show_completed"], FILTER_VALIDATE_INT);
-    if ($show_complete_tasks == 1) {
-        setcookie("show_complete_tasks", true, strtotime("+30 day"), "/");
-    } else if ($show_complete_tasks == 0) {
-        setcookie("show_complete_tasks", false, strtotime("+30 day"), "/");
-    } else {
-        return http_response_code(404);
-    }
+if (isset($_GET["add_task"])) {
+    $add_task = true;
+    $title = "Добавление задачи";
+} else {
+    $add_task = false;
+}
+
+// переменная проверяющая, есть ли параметр `add_project`
+$add_project = null;
+
+if (isset($_GET["add_project"])) {
+    $add_project  = true;
+    $title = "Добавление проекта";
+} else {
+    $add_project = false;
+}
+
+if (isset($_GET["register"])) {
+    $title = "Регистрация";
 }
 
 // массив ошибочных полей при отправки формы("ПОЛЬЗОВАТЕЛЬ НЕ СУЩЕСТВУЕТ")
 $wrongs = [];
 
 // массив обязательных для заполнения полей
-$required = ["name", "project", "date_complete", "email", "password"];
+$required = ["name", "project", "deadline", "email", "password"];
 
 // массив требований для правильности заполнений
-$rules = ["date_complete", "email", "project"];
+$rules = ["deadline", "email", "project", "deadline"];
 
 // массив ошибочных полей при отправки пользователем формы
 $errors = [];
@@ -78,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             // проверяем тип поля
             switch ($key) {
-                case "date_complete":
+                case "deadline":
                     $date_value = getDateTimeValue($value);
                     $date_format = getDateTimeFormat($value);
                     $result = validateDate($date_value, $date_format);
@@ -112,16 +128,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     switch ($_POST["submit"]) {
         case "Добавить задачу":
             $name = $_POST["name"];
-            $date_complete = $_POST["date_complete"];
+            $deadline = $_POST["deadline"];
             $project_id = getProjectsId($_POST["project"], $projects);
 
             // если ошибок нет, то добавляем эту задачу в список задач(первым)
             if (!count($errors)) {
                 // приводим введенную дату в нужный вид для БД
-                $date_complete = date("Y.m.d H:i", strtotime(getDateTimeValue($date_complete)));
+                $deadline = date("Y.m.d H:i", strtotime(getDateTimeValue($deadline)));
                 insertData($link, "tasks", [
-                    "name" => $name,
-                    "date_complete" => $date_complete,
+                    "task" => $name,
+                    "deadline" => $deadline,
                     "project_id" => $project_id,
                     "author_id" => $_SESSION["user"]["id"],
                     "is_complete" => 0,
@@ -167,6 +183,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             } else {
                 $wrongs[] = "email";
             }
+            break;
+        case "Добавить проект":
+            $name = $_POST["name"];
+
+            if (!$errors) {
+                insertData($link, "projects", [
+                    "project" => $name,
+                    "author_id" => $_SESSION["user"]["id"],
+                    "is_delete" => 0
+                ]);
+                header("Location: index.php");
+            }
+            break;
+        case "Искать":
+            $search = trim($_POST["search"]);
+
+            if (!$errors) {
+                $tasks = selectData($link, "SELECT * FROM tasks WHERE author_id = "
+                    . $_SESSION["user"]["id"]
+                    . " AND is_delete = 0 "
+                    . $task_deadline_sql
+                    . $show_complete_tasks_sql
+                    . " AND task LIKE '%" . $search . "%'"
+                );
+            }
+
     }
 }
 
@@ -182,7 +224,9 @@ renderTemplate(
         "project_id" => $project_id,
         "login" => $login,
         "wrongs" => $wrongs,
-        "show_complete_tasks" => $show_complete_tasks
+        "show_complete_tasks" => $show_complete_tasks,
+        "task_deadline" => $task_deadline,
+        "add_project" => $add_project
     ]
 );
 

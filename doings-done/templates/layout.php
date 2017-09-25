@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="<?php if ($add_task || $login): ?>overlay<?php endif; ?> <?php if (!isset($_SESSION["user"]) && !isset($_GET["register"])): ?>body-background<?php endif; ?>">
+<body class="<?php if ($add_task || $login || $add_project): ?>overlay<?php endif; ?> <?php if (!isset($_SESSION["user"]) && !isset($_GET["register"])): ?>body-background<?php endif; ?>">
 
 
 <h1 class="visually-hidden">Дела в порядке</h1>
@@ -30,13 +30,13 @@
                         </li>
                         <?php foreach ($projects as $key => $value): ?>
                           <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link <?php if ($key=== $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?="index.php?inset=" . $key; ?>"><?=$value["project"]; ?></a>
+                            <a class="main-navigation__list-item-link <?php if ($key === $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?="index.php?inset=" . $key; ?>"><?=htmlspecialchars($value["project"]); ?></a>
                             <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value["id"])) ?></span>
                           </li>
                         <?php endforeach; ?>
                     </ul>
                   </nav>
-                    <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
+                    <a class="button button--transparent button--plus content__side-button" href="?add_project">Добавить проект</a>
                 </section>
 
                 <main class="content__main">
@@ -46,7 +46,8 @@
                             "projects" => $projects,
                             "project_inset" => $project_inset,
                             "project_id" => $project_id,
-                            "show_complete_tasks" => $show_complete_tasks
+                            "show_complete_tasks" => $show_complete_tasks,
+                            "task_deadline" => $task_deadline
                         ]);
                     ?>
                 </main>
@@ -70,7 +71,7 @@
 
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
-        <a href="?add_task" class="main-footer__button button button--plus">Добавить задачу</a>
+        <a href="<?php if (isset($_SESSION["user"])): ?>?add_task<?php endif; ?>" class="main-footer__button button button--plus">Добавить задачу</a>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>
@@ -112,6 +113,11 @@
     [
         "errors" => $errors,
         "wrongs" => $wrongs
+    ]); ?>
+
+<?php if ($add_project) renderTemplate("templates/add-project.php",
+    [
+        "errors" => $errors
     ]); ?>
 
 <script type="text/javascript" src="js/script.js"></script>

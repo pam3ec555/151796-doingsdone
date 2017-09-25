@@ -1,30 +1,34 @@
 <h2 class="content__main-heading">Список задач</h2>
 
 <form class="search-form" action="index.php" method="post">
-    <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
+    <input class="search-form__input" type="text" name="search" value="" placeholder="Поиск по задачам">
 
-    <input class="search-form__submit" type="submit" name="" value="Искать">
+    <input class="search-form__submit" type="submit" name="submit" value="Искать">
 </form>
 
 <div class="tasks-controls">
     <div class="radio-button-group">
         <label class="radio-button">
-            <input class="radio-button__input visually-hidden" type="radio" name="radio" checked="">
+            <input class="radio-button__input visually-hidden" type="radio" name="radio" value="all"
+                <?php if($task_deadline == "all"): ?>checked<?php endif;?>>
             <span class="radio-button__text">Все задачи</span>
         </label>
 
         <label class="radio-button">
-            <input class="radio-button__input visually-hidden" type="radio" name="radio">
+            <input class="radio-button__input visually-hidden" type="radio" name="radio" value="today"
+                <?php if($task_deadline == "today"): ?>checked<?php endif;?>>
             <span class="radio-button__text">Повестка дня</span>
         </label>
 
         <label class="radio-button">
-            <input class="radio-button__input visually-hidden" type="radio" name="radio">
+            <input class="radio-button__input visually-hidden" type="radio" name="radio" value="tomorrow"
+                   <?php if($task_deadline == "tomorrow"): ?>checked<?php endif;?>>
             <span class="radio-button__text">Завтра</span>
         </label>
 
         <label class="radio-button">
-            <input class="radio-button__input visually-hidden" type="radio" name="radio">
+            <input class="radio-button__input visually-hidden" type="radio" name="radio" value="past"
+                   <?php if($task_deadline == "past"): ?>checked<?php endif;?>>
             <span class="radio-button__text">Просроченные</span>
         </label>
     </div>
@@ -43,15 +47,16 @@
                      ((!$value["is_complete"] && $show_complete_tasks == 0) || $show_complete_tasks == 1)
                  ):
         ?>
-        <tr class="tasks__item <?php if ($value["is_complete"] === true): ?>task--completed<?php endif; ?>">
+        <tr class="tasks__item <?php if ($value["is_complete"] === 1): ?>task--completed<?php endif; ?>">
           <td class="task__select">
             <label class="checkbox task__checkbox">
-              <input class="checkbox__input visually-hidden" type="checkbox"
+              <input class="checkbox__input checkbox__input--task visually-hidden" type="checkbox"
+                     id="task<?=$value['id']?>"
                      <?php if ($value["is_complete"] === true): ?>checked<?php endif; ?>>
-              <span class="checkbox__text"><?=$value["name"]; ?></span>
+              <span class="checkbox__text"><?=htmlspecialchars($value["task"]); ?></span>
             </label>
           </td>
-          <td class="task__date"><?=date("d.m.Y", strtotime($value["date_complete"])); ?></td>
+          <td class="task__date"><?=date("d.m.Y", strtotime($value["deadline"])); ?></td>
           <td class="task__controls"></td>
         </tr>
         <?php endif; ?>
