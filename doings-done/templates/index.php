@@ -1,9 +1,9 @@
 <h2 class="content__main-heading">Список задач</h2>
 
 <form class="search-form" action="index.php" method="post">
-    <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
+    <input class="search-form__input" type="text" name="search" value="" placeholder="Поиск по задачам">
 
-    <input class="search-form__submit" type="submit" name="" value="Искать">
+    <input class="search-form__submit" type="submit" name="submit" value="Искать">
 </form>
 
 <div class="tasks-controls">
@@ -47,12 +47,13 @@
                      ((!$value["is_complete"] && $show_complete_tasks == 0) || $show_complete_tasks == 1)
                  ):
         ?>
-        <tr class="tasks__item <?php if ($value["is_complete"] === true): ?>task--completed<?php endif; ?>">
+        <tr class="tasks__item <?php if ($value["is_complete"] === 1): ?>task--completed<?php endif; ?>">
           <td class="task__select">
             <label class="checkbox task__checkbox">
-              <input class="checkbox__input visually-hidden" type="checkbox"
+              <input class="checkbox__input checkbox__input--task visually-hidden" type="checkbox"
+                     id="task<?=$value['id']?>"
                      <?php if ($value["is_complete"] === true): ?>checked<?php endif; ?>>
-              <span class="checkbox__text"><?=htmlspecialchars($value["name"]); ?></span>
+              <span class="checkbox__text"><?=htmlspecialchars($value["task"]); ?></span>
             </label>
           </td>
           <td class="task__date"><?=date("d.m.Y", strtotime($value["deadline"])); ?></td>

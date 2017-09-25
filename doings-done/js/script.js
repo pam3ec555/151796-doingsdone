@@ -24,17 +24,36 @@ if (checkbox) {
         var is_checked = +event.target.checked;
 
         window.location = dir + '/index.php?show_completed=' + is_checked;
-
     });
 }
 
 var taskControls = document.querySelector('.radio-button-group');
 
-taskControls.addEventListener('click', function (e) {
-    var target = e.target;
+if (taskControls) {
+    taskControls.addEventListener('click', function (e) {
+        var target = e.target;
 
-    if (target.classList.contains('radio-button__input') && target.nodeName === 'INPUT') {
-        var value = target.getAttribute('value');
-        window.location = dir + '?task_deadline=' + value;
-    }
-});
+        if (target.classList.contains('radio-button__input') && target.nodeName === 'INPUT') {
+            var value = target.getAttribute('value');
+            window.location = dir + '?task_deadline=' + value;
+        }
+    });
+}
+
+var completeTaskCheckbox = document.querySelectorAll('.checkbox__input--task');
+if (completeTaskCheckbox) {
+    completeTaskCheckbox.forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            var id = parseInt((this.id).replace(/\D+/g,""));
+            window.location = dir + '?task_complete=' + id;
+        });
+    });
+}
+
+var closeBtn = document.querySelector('.modal__close');
+console.log(closeBtn);
+if (closeBtn) {
+    closeBtn.addEventListener('click', function () {
+        window.location = dir + '/index.php';
+    });
+}

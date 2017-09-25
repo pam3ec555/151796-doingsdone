@@ -4,14 +4,16 @@ USE doingsdone;
 
 CREATE TABLE projects (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  project CHAR(64)
+  project CHAR(64),
+  author_id INT,
+  is_delete BOOLEAN
 );
 
 CREATE TABLE tasks (
   id INT AUTO_INCREMENT PRIMARY KEY,
   date_create DATETIME,
   date_complete DATETIME,
-  name CHAR(64),
+  task CHAR(64),
   file CHAR,
   deadline DATETIME,
   project_id INT,
