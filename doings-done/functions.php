@@ -6,8 +6,7 @@
  * @param $name_of_project // Имя проекта
  * @return int // Кол-во проектов определенного типа
  */
-function setProjectsCount($tasks, $project_id)
-{
+function setProjectsCount($tasks, $project_id) {
     // Счетчик
     $count = 0;
 
@@ -27,8 +26,7 @@ function setProjectsCount($tasks, $project_id)
  * @param $data // массив данных, для текущего шаблона
  * @return string // готовый шаблон
  */
-function renderTemplate($template_url, $data = false)
-{
+function renderTemplate($template_url, $data = false) {
     // Проверка на существование url
     if (!file_exists($template_url)) {
         return "";
@@ -55,8 +53,7 @@ function renderTemplate($template_url, $data = false)
  * @param $value // значение
  * @return false|string
  */
-function getDateDay($value)
-{
+function getDateDay($value) {
 
     switch ($value) {
         case "сегодня":
@@ -99,8 +96,7 @@ function getDateDay($value)
  * @param $value // значение
  * @return array|mixed|string
  */
-function getDateValConversion($value)
-{
+function getDateValConversion($value) {
     // убираю внешние пробелы
     $value = trim($value);
     // приравниваю строку к нижнему регистру
@@ -120,8 +116,7 @@ function getDateValConversion($value)
  * @param $value // значение
  * @return array|false|mixed|string
  */
-function getDateTimeValue($value)
-{
+function getDateTimeValue($value) {
     $value = getDateValConversion($value);
 
     if (count($value) === 2) {
@@ -138,8 +133,7 @@ function getDateTimeValue($value)
  * @param $value // значение
  * @return string // правильный вид формата
  */
-function getDateTimeFormat($value)
-{
+function getDateTimeFormat($value) {
     $value = getDateValConversion($value);
     $format = null;
 
@@ -158,8 +152,7 @@ function getDateTimeFormat($value)
  * @param $format // формат даты
  * @return bool // валидность
  */
-function validateDate($value, $format)
-{
+function validateDate($value, $format) {
     $date = DateTime::createFromFormat($format, $value);
     return $date && $date -> format($format) == $value;
 }
@@ -169,8 +162,7 @@ function validateDate($value, $format)
  * @param $value
  * @return bool
  */
-function validateEmail($value)
-{
+function validateEmail($value) {
     return filter_var($value, FILTER_VALIDATE_EMAIL);
 }
 
@@ -180,8 +172,7 @@ function validateEmail($value)
  * @param $users
  * @return array|null
  */
-function searchUserByEmail($email, $users)
-{
+function searchUserByEmail($email, $users) {
     $result = null;
 
     foreach ($users as $user) {
@@ -201,8 +192,7 @@ function searchUserByEmail($email, $users)
  * @param array $data // [необязательный аргумент] простой массив со всеми значениями для запроса.
  * @return array // массив данных из БД
  */
-function selectData($link, $sql, $data = [])
-{
+function selectData($link, $sql, $data = []) {
     $array = [];
 
     $stmt = db_get_prepare_stmt($link, $sql, $data);
@@ -220,8 +210,7 @@ function selectData($link, $sql, $data = [])
  * @param $data // [необязательный аргумент] простой массив со всеми значениями для запроса.
  * @return int // id последней добавленной записи
  */
-function insertData($link, $table, $data)
-{
+function insertData($link, $table, $data) {
     $sql = null;
     $keys = null;
     $values = null;
@@ -257,8 +246,7 @@ function insertData($link, $table, $data)
  * @param array $data // [необязательный аргумент] простой массив со всеми значениями для запроса
  * @return bool
  */
-function execQuery($link, $sql, $data = [])
-{
+function execQuery($link, $sql, $data = []) {
     $stmt = db_get_prepare_stmt($link, $sql, $data);
     $result = mysqli_stmt_execute($stmt);
 
@@ -271,8 +259,7 @@ function execQuery($link, $sql, $data = [])
  * @param $projects // массив проектов
  * @return null|int // id проекта
  */
-function getProjectsId($project, $projects)
-{
+function getProjectsId($project, $projects) {
     $result = null;
 
     foreach ($projects as $key => $value) {
@@ -287,8 +274,7 @@ function getProjectsId($project, $projects)
 /**
  * Метод, прерывающий загрузку страницы, возвращая ошибку 404
  */
-function pageNotFound()
-{
+function pageNotFound() {
     http_response_code(404);
     renderTemplate("templates/error.php");
     exit();
@@ -299,8 +285,7 @@ function pageNotFound()
  * @param $task_deadline
  * @return string
  */
-function getTaskDeadline($task_deadline)
-{
+function getTaskDeadline($task_deadline) {
     $result = "";
 
     switch ($task_deadline) {
