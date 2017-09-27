@@ -3,6 +3,7 @@
 session_start();
 
 require_once ("functions.php");
+//require_once ("vendor/autoload.php");
 require_once ("mysql_helper.php");
 require_once ("init.php");
 
@@ -12,6 +13,151 @@ if (isset($_GET["logout"])) {
 
     header("Location: index.php");
 }
+
+$show_complete_tasks = null;
+
+if (isset($_COOKIE["show_complete_tasks"])) {
+    $show_complete_tasks = $_COOKIE["show_complete_tasks"];
+}
+
+// проверка на галочку(показывать выполненные задания)
+if (isset($_GET["show_completed"])) {
+    $show_complete_tasks = filter_var($_GET["show_completed"], FILTER_VALIDATE_INT);
+
+    if ($show_complete_tasks == 1) {
+        setcookie("show_complete_tasks", true, strtotime("+30 day"), "/");
+    } else if ($show_complete_tasks == 0) {
+        setcookie("show_complete_tasks", false, strtotime("+30 day"), "/");
+    } else {
+        pageNotFound();
+    }
+}
+
+$show_complete_tasks_sql = "";
+
+if ($show_complete_tasks == 0) {
+    $show_complete_tasks_sql = " AND is_complete = 0";
+}
+
+$task_deadline_sql = "";
+
+if (isset($_COOKIE["task_deadline"])) {
+    $task_deadline = $_COOKIE["task_deadline"];
+    $task_deadline_sql = getTaskDeadline($task_deadline);
+} else {
+    $task_deadline = "all";
+}
+
+if (isset($_GET["task_deadline"])) {
+    $task_deadlines = [
+        "all",
+        "today",
+        "tomorrow",
+        "past"
+    ];
+
+    if (in_array($_GET["task_deadline"], $task_deadlines)) {
+        $task_deadline = $_GET["task_deadline"];
+        setcookie("task_deadline", $task_deadline, strtotime("+30 day"), "/");
+
+        $task_deadline_sql = getTaskDeadline($task_deadline);
+    } else {
+        pageNotFound();
+    }
+}
+
+// проверка на смену статуса задачи выполнена/не выполнена
+if (isset($_GET["task_complete"])) {
+    $task_complete = filter_var($_GET["task_complete"], FILTER_VALIDATE_INT);
+
+    if ($task_complete) {
+        $is_complete = selectData($link, "SELECT is_complete FROM tasks WHERE author_id = "  . $_SESSION["user"]["id"] . " AND id = " . $task_complete);
+
+        // если до нажатия на чекбокс, задача была выполнена, то убираем дату выполнения с бд
+        if ($is_complete[0]["is_complete"]) {
+            $date_complete = "NULL";
+        } else {
+            $date_complete = "NOW()";
+        }
+
+        $sql = "UPDATE tasks SET is_complete = !is_complete, date_complete = " . $date_complete . " WHERE id = " . $task_complete;
+
+        execQuery($link, $sql);
+
+        header("Location: index.php");
+    } else {
+        pageNotFound();
+    }
+}
+
+if (isset($_GET["task_delete"])) {
+    $task_delete = filter_var($_GET["task_delete"], FILTER_VALIDATE_INT);
+
+    if ($task_delete) {
+        $sql = "UPDATE tasks SET is_delete = 1 WHERE id = " . $task_delete;
+
+        execQuery($link, $sql);
+
+        header("Location: index.php");
+    } else {
+        pageNotFound();
+    }
+}
+
+if (isset($_GET["task_copy"])) {
+    $task_copy = filter_var($_GET["task_copy"], FILTER_VALIDATE_INT);
+
+    if ($task_copy) {
+        // формируем запрос для получения выбранной задачи
+        $sql = "SELECT task, file_url, file_name, deadline, project_id FROM tasks WHERE id = " . $task_copy;
+
+        $cur_task = selectData($link, $sql);
+        $cur_task = $cur_task[0];
+
+        if ($cur_task && $cur_task["file_url"] && $cur_task["file_name"]) {
+            insertData($link, "tasks", [
+                "date_create" => date("Y.m.d H:i"),
+                "task" => $cur_task["task"],
+                "file_url" => $cur_task["file_url"],
+                "file_name" => $cur_task["file_name"],
+                "deadline" => $cur_task["deadline"],
+                "project_id" => $cur_task["project_id"],
+                "author_id" => $_SESSION["user"]["id"],
+                "is_complete" => 0,
+                "is_delete" => 0
+            ]);
+        } else if ($cur_task) {
+            insertData($link, "tasks", [
+                "date_create" => date("Y.m.d H:i"),
+                "task" => $cur_task["task"],
+                "deadline" => $cur_task["deadline"],
+                "project_id" => $cur_task["project_id"],
+                "author_id" => $_SESSION["user"]["id"],
+                "is_complete" => 0,
+                "is_delete" => 0
+            ]);
+        }
+    } else {
+        pageNotFound();
+    }
+}
+
+// массив пользователей взятый из БД
+$users = selectData($link, "SELECT * FROM users");
+
+// массив проектов, взятый из БД
+$projects = selectData($link, "SELECT * FROM projects WHERE author_id = "
+    . $_SESSION["user"]["id"]
+    . " AND is_delete = 0 "
+);
+
+// массив задач конкретного пользователя взятый из БД
+$tasks = selectData($link, "SELECT * FROM tasks WHERE author_id = "
+    . $_SESSION["user"]["id"]
+    . " AND is_delete = 0 "
+    . $task_deadline_sql
+    . $show_complete_tasks_sql
+);
 
 $project_inset = -1;
 
@@ -77,6 +223,12 @@ $rules = ["deadline", "email", "project", "deadline"];
 // массив ошибочных полей при отправки пользователем формы
 $errors = [];
 
+// ссылка для скачивания файла
+$file_url = null;
+
+// имя файла
+$file_name = null;
+
 // валидация формы добавления задачи
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
@@ -115,7 +267,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // если пользователь загрузил файл, помещаем его в папку /uploads/
         if (isset($_FILES["preview"])) {
-            $file_name = basename($_FILES["preview"]["name"]);
+            $file_name = $_FILES["preview"]["name"];
             $file_path = __DIR__ . "/uploads/";
             $file_url = "/uploads/" . $file_name;
             $file_tmp_name = $_FILES["preview"]["tmp_name"];
@@ -135,14 +287,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if (!count($errors)) {
                 // приводим введенную дату в нужный вид для БД
                 $deadline = date("Y.m.d H:i", strtotime(getDateTimeValue($deadline)));
-                insertData($link, "tasks", [
-                    "task" => $name,
-                    "deadline" => $deadline,
-                    "project_id" => $project_id,
-                    "author_id" => $_SESSION["user"]["id"],
-                    "is_complete" => 0,
-                    "is_delete" => 0
-                ]);
+
+                if ($file_url && $file_name) {
+                    insertData($link, "tasks", [
+                        "date_create" => date("Y.m.d H:i"),
+                        "task" => $name,
+                        "file_url" => $file_url,
+                        "file_name" => $file_name,
+                        "deadline" => $deadline,
+                        "project_id" => $project_id,
+                        "author_id" => $_SESSION["user"]["id"],
+                        "is_complete" => 0,
+                        "is_delete" => 0
+                    ]);
+                } else if (!$file_url && !$file_name) {
+                    insertData($link, "tasks", [
+                        "date_create" => date("Y.m.d H:i"),
+                        "task" => $name,
+                        "deadline" => $deadline,
+                        "project_id" => $project_id,
+                        "author_id" => $_SESSION["user"]["id"],
+                        "is_complete" => 0,
+                        "is_delete" => 0
+                    ]);
+                }
                 header("Location: index.php");
             }
             break;
