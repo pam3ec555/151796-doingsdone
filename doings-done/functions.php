@@ -280,6 +280,11 @@ function pageNotFound() {
     exit();
 }
 
+/**
+ * Метод, принимающий на вход значение выбранного дедлайна и выводящий готовый sql запрос для вывода нужного дедлайна
+ * @param $task_deadline
+ * @return string
+ */
 function getTaskDeadline($task_deadline) {
     $result = "";
 

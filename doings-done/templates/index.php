@@ -48,16 +48,37 @@
                  ):
         ?>
         <tr class="tasks__item <?php if ($value["is_complete"] === 1): ?>task--completed<?php endif; ?>">
-          <td class="task__select">
+            <td class="task__select">
             <label class="checkbox task__checkbox">
               <input class="checkbox__input checkbox__input--task visually-hidden" type="checkbox"
                      id="task<?=$value['id']?>"
                      <?php if ($value["is_complete"] === true): ?>checked<?php endif; ?>>
               <span class="checkbox__text"><?=htmlspecialchars($value["task"]); ?></span>
             </label>
-          </td>
-          <td class="task__date"><?=date("d.m.Y", strtotime($value["deadline"])); ?></td>
-          <td class="task__controls"></td>
+            </td>
+            <td class="task__file">
+<!--                <a class="download-link" href="/--><?//=$value["file"]?><!--">Home.psd</a>-->
+            </td>
+            <td class="task__date"><?=date("d.m.Y", strtotime($value["deadline"])); ?></td>
+            <td class="task__controls">
+                <button class="expand-control" type="button" name="button">Открыть список комманд</button>
+
+                <ul class="expand-list hidden">
+                    <?php if ($value["is_complete"] === 0): ?>
+                        <li class="expand-list__item">
+                            <a href="?task_complete=<?=$value['id']?>">Выполнить</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <li class="expand-list__item">
+                        <a href="?task_delete=<?=$value['id']?>">Удалить</a>
+                    </li>
+
+                    <li class="expand-list__item">
+                        <a href="?task_copy=<?=$value['id']?>">Дублировать</a>
+                    </li>
+                </ul>
+            </td>
         </tr>
         <?php endif; ?>
     <?php endforeach; ?>
