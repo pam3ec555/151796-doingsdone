@@ -259,12 +259,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // если пользователь загрузил файл, помещаем его в папку /uploads/
         if (isset($_FILES["preview"])) {
-            $file_name = basename($_FILES["preview"]["name"]);
+            $file_name = $_FILES["preview"]["name"];
             $file_path = __DIR__ . "/uploads/";
             $file_url = "/uploads/" . $file_name;
             $file_tmp_name = $_FILES["preview"]["tmp_name"];
 
-            move_uploaded_file($file_tmp_name, $file_path . $file_name);
+            $is = move_uploaded_file($file_tmp_name, $file_path . $file_name);
+            var_dump($file_path);
         }
     }
 
