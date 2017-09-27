@@ -57,7 +57,9 @@
             </label>
             </td>
             <td class="task__file">
-<!--                <a class="download-link" href="/--><?//=$value["file"]?><!--">Home.psd</a>-->
+                <?php if ($value["file_url"]): ?>
+                    <a class="download-link" href="<?=$value["file_url"]?>"><?=$value["file_name"]?></a>
+                <?php endif; ?>
             </td>
             <td class="task__date"><?=date("d.m.Y", strtotime($value["deadline"])); ?></td>
             <td class="task__controls">

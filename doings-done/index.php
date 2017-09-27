@@ -3,6 +3,7 @@
 session_start();
 
 require_once ("functions.php");
+//require_once ("vendor/autoload.php");
 require_once ("mysql_helper.php");
 require_once ("init.php");
 
@@ -108,16 +109,17 @@ if (isset($_GET["task_copy"])) {
 
     if ($task_copy) {
         // формируем запрос для получения выбранной задачи
-        $sql = "SELECT task, file, deadline, project_id FROM tasks WHERE id = " . $task_copy;
+        $sql = "SELECT task, file_url, file_name, deadline, project_id FROM tasks WHERE id = " . $task_copy;
 
         $cur_task = selectData($link, $sql);
         $cur_task = $cur_task[0];
 
-        if ($cur_task && $cur_task["file"]) {
+        if ($cur_task && $cur_task["file_url"] && $cur_task["file_name"]) {
             insertData($link, "tasks", [
                 "date_create" => date("Y.m.d H:i"),
                 "task" => $cur_task["task"],
-                "file" => $cur_task["file"],
+                "file_url" => $cur_task["file_url"],
+                "file_name" => $cur_task["file_name"],
                 "deadline" => $cur_task["deadline"],
                 "project_id" => $cur_task["project_id"],
                 "author_id" => $_SESSION["user"]["id"],
@@ -221,6 +223,12 @@ $rules = ["deadline", "email", "project", "deadline"];
 // массив ошибочных полей при отправки пользователем формы
 $errors = [];
 
+// ссылка для скачивания файла
+$file_url = null;
+
+// имя файла
+$file_name = null;
+
 // валидация формы добавления задачи
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
@@ -264,8 +272,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $file_url = "/uploads/" . $file_name;
             $file_tmp_name = $_FILES["preview"]["tmp_name"];
 
-            $is = move_uploaded_file($file_tmp_name, $file_path . $file_name);
-            var_dump($file_path);
+            move_uploaded_file($file_tmp_name, $file_path . $file_name);
         }
     }
 
@@ -280,15 +287,30 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if (!count($errors)) {
                 // приводим введенную дату в нужный вид для БД
                 $deadline = date("Y.m.d H:i", strtotime(getDateTimeValue($deadline)));
-                insertData($link, "tasks", [
-                    "date_create" => date("Y.m.d H:i"),
-                    "task" => $name,
-                    "deadline" => $deadline,
-                    "project_id" => $project_id,
-                    "author_id" => $_SESSION["user"]["id"],
-                    "is_complete" => 0,
-                    "is_delete" => 0
-                ]);
+
+                if ($file_url && $file_name) {
+                    insertData($link, "tasks", [
+                        "date_create" => date("Y.m.d H:i"),
+                        "task" => $name,
+                        "file_url" => $file_url,
+                        "file_name" => $file_name,
+                        "deadline" => $deadline,
+                        "project_id" => $project_id,
+                        "author_id" => $_SESSION["user"]["id"],
+                        "is_complete" => 0,
+                        "is_delete" => 0
+                    ]);
+                } else if (!$file_url && !$file_name) {
+                    insertData($link, "tasks", [
+                        "date_create" => date("Y.m.d H:i"),
+                        "task" => $name,
+                        "deadline" => $deadline,
+                        "project_id" => $project_id,
+                        "author_id" => $_SESSION["user"]["id"],
+                        "is_complete" => 0,
+                        "is_delete" => 0
+                    ]);
+                }
                 header("Location: index.php");
             }
             break;
