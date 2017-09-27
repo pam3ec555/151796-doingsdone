@@ -3,7 +3,7 @@
 require_once 'mysql_helper.php';
 require_once 'init.php';
 require_once 'functions.php';
-require_once ("../vendor/autoload.php");
+require_once ("vendor/autoload.php");
 
 $sql = "SELECT email, users.id as u_id, users.name, DATE_FORMAT(deadline, '%d.%m.%Y %H:%i') as deadline, task, is_complete, is_delete"
         . " FROM tasks"
