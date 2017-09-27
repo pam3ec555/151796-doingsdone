@@ -1,7 +1,7 @@
 'use strict';
 
 var expandControls = document.querySelectorAll('.expand-control');
-var dir = "/151796-doingsdone/doings-done";
+var dir = "/151796-doingsdone";
 
 var hidePopups = function() {
   [].forEach.call(document.querySelectorAll('.expand-list'), function(item) {
@@ -51,9 +51,8 @@ if (completeTaskCheckbox) {
 }
 
 var closeBtn = document.querySelector('.modal__close');
-console.log(closeBtn);
 if (closeBtn) {
     closeBtn.addEventListener('click', function () {
-        window.location = dir + '/index.php';
+        window.location = dir + '/';
     });
 }

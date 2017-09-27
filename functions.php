@@ -131,7 +131,7 @@ function getDateTimeValue($value) {
 /**
  * Метод, принимающий на вход значение формата и преобразовывает его в правильный вид
  * @param $value // значение
- * @return string // правильный вид формата
+ * @return string|null // правильный вид формата
  */
 function getDateTimeFormat($value) {
     $value = getDateValConversion($value);
@@ -196,9 +196,15 @@ function selectData($link, $sql, $data = []) {
     $array = [];
 
     $stmt = db_get_prepare_stmt($link, $sql, $data);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $array = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    if ($stmt) {
+        if (mysqli_stmt_execute($stmt)) {
+            $result = mysqli_stmt_get_result($stmt);
+
+            if ($result) {
+                $array = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            }
+        }
+    }
 
     return $array;
 }
@@ -211,9 +217,9 @@ function selectData($link, $sql, $data = []) {
  * @return int // id последней добавленной записи
  */
 function insertData($link, $table, $data) {
-    $sql = null;
-    $keys = null;
-    $values = null;
+    $sql = "";
+    $keys = "";
+    $values = "";
     $id_of_last_entry = false;
 
     // формируем SQL-запрос
@@ -232,8 +238,11 @@ function insertData($link, $table, $data) {
 
     if ($sql) {
         $stmt = db_get_prepare_stmt($link, $sql, $data);
-        mysqli_stmt_execute($stmt);
-        $id_of_last_entry = mysqli_insert_id($link);
+        if ($stmt) {
+            if (mysqli_stmt_execute($stmt)) {
+                $id_of_last_entry = mysqli_insert_id($link);
+            }
+        }
     }
 
     return $id_of_last_entry;
@@ -247,16 +256,20 @@ function insertData($link, $table, $data) {
  * @return bool
  */
 function execQuery($link, $sql, $data = []) {
+    $result = false;
+
     $stmt = db_get_prepare_stmt($link, $sql, $data);
-    $result = mysqli_stmt_execute($stmt);
+    if ($stmt) {
+        $result = mysqli_stmt_execute($stmt);
+    }
 
     return $result;
 }
 
 /**
- * Метод, проверяющий существования проекта в БД и возвращающий его id
- * @param $project // выбранный/введенный проект
- * @param $projects // массив проектов
+ * Метод, проверяющий существования проекта в массиве и возвращающий его id
+ * @param $project string // выбранный/введенный проект
+ * @param $projects array // массив проектов
  * @return null|int // id проекта
  */
 function getProjectsId($project, $projects) {

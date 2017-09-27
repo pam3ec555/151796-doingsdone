@@ -1,9 +1,9 @@
 # Запись проектов в таблицу проекты
-INSERT INTO projects SET project = "Входящие";
-INSERT INTO projects SET project = "Учеба";
-INSERT INTO projects SET project = "Работа";
-INSERT INTO projects SET project = "Домашние дела";
-INSERT INTO projects SET project = "Авто";
+INSERT INTO projects SET project = "Входящие", author_id = 1, is_delete = 0;
+INSERT INTO projects SET project = "Учеба", author_id = 1, is_delete = 0;
+INSERT INTO projects SET project = "Работа", author_id = 2, is_delete = 0;
+INSERT INTO projects SET project = "Домашние дела", author_id = 2, is_delete = 0;
+INSERT INTO projects SET project = "Авто", author_id = 3, is_delete = 0;
 
 # Чтение проектов с таблицы проектов
 SELECT * FROM projects;
@@ -12,48 +12,31 @@ SELECT * FROM projects;
 INSERT INTO users SET
   email = "ignat.v@gmail.com",
   name = "Игнат",
-  password = "$2y$10$OqvsKHQwr0Wk6FMZDoHo1uHoXd4UdxJG/5UDtUiie00XaxMHrW8ka";
+  password = "$2y$10$OqvsKHQwr0Wk6FMZDoHo1uHoXd4UdxJG/5UDtUiie00XaxMHrW8ka",
+  date_of_registration = now();
 INSERT INTO users SET
   email = "kitty_93@li.ru",
   name = "Леночка",
-  password = "$2y$10$bWtSjUhwgggtxrnJ7rxmIe63ABubHQs0AS0hgnOo41IEdMHkYoSVa";
+  password = "$2y$10$bWtSjUhwgggtxrnJ7rxmIe63ABubHQs0AS0hgnOo41IEdMHkYoSVa",
+  date_of_registration = now();
 INSERT INTO users SET
   email = "warrior07@mail.ru",
   name = "Руслан",
-  password = "$2y$10$2OxpEH7narYpkOT1H5cApezuzh10tZEEQ2axgFOaKW.55LxIJBgWW";
+  password = "$2y$10$2OxpEH7narYpkOT1H5cApezuzh10tZEEQ2axgFOaKW.55LxIJBgWW",
+  date_of_registration = now();
 
 # Чтение пользователей из таблицы пользователей
 SELECT * FROM users;
 
 # Запись задач в таблицу задач
 INSERT INTO tasks SET
-  date_complete = "2018-06-01",
-  name = "Собеседование в IT компании",
+  date_create = now(),
+  deadline = "2018-06-01",
+  task = "Собеседование в IT компании",
   project_id = 3,
-  author_id = 1;
-INSERT INTO tasks SET
-  date_complete = "2018-05-25",
-  name = "Выполнить тестовое задание",
-  project_id = 3,
-  author_id = 1;
-INSERT INTO tasks SET
-  date_complete = "2018-04-21",
-  name = "Сделать задание первого раздела",
-  project_id = 2,
-  author_id = 2;
-INSERT INTO tasks SET
-  date_complete = "2018-04-22",
-  name = "Встреча с другом",
-  project_id = 1,
-  author_id = 2;
-INSERT INTO tasks SET
-  name = "Купить корм для кота",
-  project_id = 4,
-  author_id = 3;
-INSERT INTO tasks SET
-  name = "Заказать пиццу",
-  project_id = 4,
-  author_id = 3;
+  author_id = 1,
+  is_complete = 0,
+  is_delete = 0;
 
 # Чтение задач из таблицы задач
 SELECT * FROM tasks;
@@ -76,7 +59,7 @@ GROUP BY project;
 
 # получил список из задач для одного пользователя
 SELECT
-  t.name,
+  t.task,
   t.date_complete,
   t.date_create,
   t.file,
@@ -89,7 +72,7 @@ WHERE t.author_id = 2;
 
 # Обновляем значение поля date_complete, тем самым показывая, что задача была выполнена
 UPDATE tasks t
-SET date_complete = "2017-09-10"
+SET date_complete = "2017-09-10", is_complete = 1
 WHERE t.id = 6;
 
 # Проверяем результат предыдущего действия
@@ -105,7 +88,7 @@ SELECT * FROM tasks t WHERE t.deadline = "2017-09-11";
 
 # Меняю название задачи по id
 UPDATE tasks t
-SET t.name = "Пойти погулять"
+SET t.task = "Пойти погулять"
 WHERE t.id = 3;
 
 # Проверяем результат предыдущего действия

@@ -14,7 +14,9 @@ if (isset($_GET["logout"])) {
     header("Location: index.php");
 }
 
-$show_complete_tasks = null;
+$dir = "/151796-doingsdone";
+
+$show_complete_tasks = false;
 
 if (isset($_COOKIE["show_complete_tasks"])) {
     $show_complete_tasks = $_COOKIE["show_complete_tasks"];
@@ -269,7 +271,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (isset($_FILES["preview"])) {
             $file_name = $_FILES["preview"]["name"];
             $file_path = __DIR__ . "/uploads/";
-            $file_url = "/uploads/" . $file_name;
+            $file_url =  $dir . "/uploads/" . $file_name;
             $file_tmp_name = $_FILES["preview"]["tmp_name"];
 
             move_uploaded_file($file_tmp_name, $file_path . $file_name);
