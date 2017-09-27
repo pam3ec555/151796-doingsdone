@@ -3,7 +3,7 @@
 session_start();
 
 require_once ("functions.php");
-//require_once ("vendor/autoload.php");
+require_once ("../vendor/autoload.php");
 require_once ("mysql_helper.php");
 require_once ("init.php");
 
@@ -300,7 +300,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         "is_complete" => 0,
                         "is_delete" => 0
                     ]);
-                } else if (!$file_url && !$file_name) {
+                } else {
                     insertData($link, "tasks", [
                         "date_create" => date("Y.m.d H:i"),
                         "task" => $name,
