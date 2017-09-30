@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ALL);
 session_start();
 
 require_once ("functions.php");
@@ -147,21 +147,26 @@ if (isset($_GET["task_copy"])) {
 // массив пользователей взятый из БД
 $users = selectData($link, "SELECT * FROM users");
 
-// массив проектов, взятый из БД
-$projects = selectData($link, "SELECT * FROM projects WHERE author_id = "
-    . $_SESSION["user"]["id"]
-    . " AND is_delete = 0 "
-);
+$projects = "";
+$tasks = "";
+
+if (isset($_SESSION["user"])) {
+    // массив проектов, взятый из БД
+    $projects = selectData($link, "SELECT * FROM projects WHERE author_id = "
+        . $_SESSION["user"]["id"]
+        . " AND is_delete = 0 "
+    );
 
 // массив задач конкретного пользователя взятый из БД
-$tasks = selectData($link, "SELECT * FROM tasks WHERE author_id = "
-    . $_SESSION["user"]["id"]
-    . " AND is_delete = 0 "
-    . $task_deadline_sql
-    . $show_complete_tasks_sql
-);
+    $tasks = selectData($link, "SELECT * FROM tasks WHERE author_id = "
+        . $_SESSION["user"]["id"]
+        . " AND is_delete = 0 "
+        . $task_deadline_sql
+        . $show_complete_tasks_sql
+    );
+}
 
-$project_inset = -1;
+$project_id = 0;
 
 // проверка на параметр запроса
 if (isset($_GET["inset"])) {
@@ -176,12 +181,12 @@ if (isset($_GET["inset"])) {
     } else {
         pageNotFound();
     }
+} else {
+    $project_inset = -1;
 }
 
 $title = "Главная";
 
-// проверка на параметр логин
-$login = null;
 if (isset($_GET["login"])) {
     $login = true;
     $title = "Вход";
@@ -189,18 +194,12 @@ if (isset($_GET["login"])) {
     $login = false;
 }
 
-// переменная проверяющая, есть ли параметр `add_task`
-$add_task = null;
-
 if (isset($_GET["add_task"])) {
     $add_task = true;
     $title = "Добавление задачи";
 } else {
     $add_task = false;
 }
-
-// переменная проверяющая, есть ли параметр `add_project`
-$add_project = null;
 
 if (isset($_GET["add_project"])) {
     $add_project  = true;
@@ -355,30 +354,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
             break;
         case "Добавить проект":
-            $name = $_POST["name"];
+            if (isset($_SESSION["user"])) {
+                $name = $_POST["name"];
 
-            if (!$errors) {
-                insertData($link, "projects", [
-                    "project" => $name,
-                    "author_id" => $_SESSION["user"]["id"],
-                    "is_delete" => 0
-                ]);
-                header("Location: index.php");
+                if (!$errors) {
+                    insertData($link, "projects", [
+                        "project" => $name,
+                        "author_id" => $_SESSION["user"]["id"],
+                        "is_delete" => 0
+                    ]);
+                    header("Location: index.php");
+                }
             }
             break;
         case "Искать":
-            $search = trim($_POST["search"]);
+            if (isset($_SESSION["user"])) {
+                $search = trim($_POST["search"]);
 
-            if (!$errors) {
-                $tasks = selectData($link, "SELECT * FROM tasks WHERE author_id = "
-                    . $_SESSION["user"]["id"]
-                    . " AND is_delete = 0 "
-                    . $task_deadline_sql
-                    . $show_complete_tasks_sql
-                    . " AND task LIKE '%" . $search . "%'"
-                );
+                if (!$errors) {
+                    $tasks = selectData($link, "SELECT * FROM tasks WHERE author_id = "
+                        . $_SESSION["user"]["id"]
+                        . " AND is_delete = 0 "
+                        . $task_deadline_sql
+                        . $show_complete_tasks_sql
+                        . " AND task LIKE '%" . $search . "%'"
+                    );
+                }
             }
-
+            break;
     }
 }
 

@@ -1,7 +1,8 @@
 'use strict';
 
 var expandControls = document.querySelectorAll('.expand-control');
-var dir = "/151796-doingsdone";
+var pathname = location.pathname;
+console.log(pathname);
 
 var hidePopups = function() {
   [].forEach.call(document.querySelectorAll('.expand-list'), function(item) {
@@ -23,7 +24,7 @@ if (checkbox) {
     checkbox.addEventListener('change', function(event) {
         var is_checked = +event.target.checked;
 
-        window.location = dir + '/index.php?show_completed=' + is_checked;
+        location.replace(pathname + '?show_completed=' + is_checked);
     });
 }
 
@@ -35,7 +36,7 @@ if (taskControls) {
 
         if (target.classList.contains('radio-button__input') && target.nodeName === 'INPUT') {
             var value = target.getAttribute('value');
-            window.location = dir + '?task_deadline=' + value;
+            location.replace(pathname + '?task_deadline=' + value);
         }
     });
 }
@@ -45,7 +46,7 @@ if (completeTaskCheckbox) {
     completeTaskCheckbox.forEach(function (checkbox) {
         checkbox.addEventListener('change', function () {
             var id = parseInt((this.id).replace(/\D+/g,""));
-            window.location = dir + '?task_complete=' + id;
+            location.replace(pathname + '?task_complete=' + id);
         });
     });
 }
@@ -53,6 +54,6 @@ if (completeTaskCheckbox) {
 var closeBtn = document.querySelector('.modal__close');
 if (closeBtn) {
     closeBtn.addEventListener('click', function () {
-        window.location = dir + '/';
+        location.replace(pathname + '/');
     });
 }
