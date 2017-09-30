@@ -169,20 +169,18 @@ if (isset($_SESSION["user"])) {
 $project_id = 0;
 
 // проверка на параметр запроса
-if (isset($_GET["inset"])) {
+if (isset($_GET["inset"]) && $_SESSION["user"] && $projects) {
     // фильтрация параметра inset
     $project_inset = filter_var($_GET["inset"], FILTER_VALIDATE_INT, ["options" => [
-        "min_range" => -1,
-        "max_range" => count($projects) - 1
+        "min_range" => 0,
+        "max_range" => count($projects)
     ]]);
 
-    if ($project_inset || $project_inset === 0) {
+    if ($project_inset) {
         $project_id = $projects[$project_inset]["id"];
     } else {
         pageNotFound();
     }
-} else {
-    $project_inset = -1;
 }
 
 $title = "Главная";
