@@ -117,7 +117,8 @@
 
 <?php if ($add_project) renderTemplate("templates/add-project.php",
     [
-        "errors" => $errors
+        "errors" => $errors,
+        "wrongs" => $wrongs
     ]); ?>
 
 <script type="text/javascript" src="js/script.js"></script>

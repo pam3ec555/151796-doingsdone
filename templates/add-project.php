@@ -20,6 +20,9 @@ $name = $_POST["name"] ?? "";
             <?php if (in_array("name", $errors)): ?>
                 <span class="form__error">Заполните поле имя</span>
             <?php endif; ?>
+            <?php if (in_array("name", $wrongs)): ?>
+                <span class="form__error">Проект с таким именем уже существует</span>
+            <?php endif; ?>
 
         </div>
 

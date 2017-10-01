@@ -4,7 +4,7 @@
 $name = $_POST["name"] ?? "";
 
 // дата задачи, отправленной на сервер
-$date = $_POST["date"] ?? "";
+$date = $_POST["deadline"] ?? "";
 
 // проект задачи, отправленной на сервер
 $project = $_POST["project"] ?? "";

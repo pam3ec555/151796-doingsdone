@@ -258,7 +258,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $result = validateEmail($value);
                     break;
                 case "project":
-                    $result = getProjectsId($value, $projects);
+                    $result = validateProject($value, $projects, "id");
                     break;
             }
 
@@ -282,12 +282,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // проверяем, какая форма отправилась
     switch ($_POST["submit"]) {
         case "Добавить задачу":
-            $name = $_POST["name"];
-            $deadline = $_POST["deadline"];
-            $project_id = getProjectsId($_POST["project"], $projects);
-
             // если ошибок нет, то добавляем эту задачу в список задач(первым)
             if (!count($errors)) {
+                $name = $_POST["name"];
+                $deadline = $_POST["deadline"];
+                $project_id = $_POST["project"];
                 // приводим введенную дату в нужный вид для БД
                 $deadline = date("Y.m.d H:i", strtotime(getDateTimeValue($deadline)));
 
@@ -314,7 +313,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         "is_delete" => 0
                     ]);
                 }
-                header("Location: index.php");
+//                header("Location: index.php");
             }
             break;
         case "Войти":
@@ -358,14 +357,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         case "Добавить проект":
             if (isset($_SESSION["user"])) {
                 $name = $_POST["name"];
-
+                $has_project = validateProject($name, $projects, "project");
                 if (!$errors) {
-                    insertData($link, "projects", [
-                        "project" => $name,
-                        "author_id" => $_SESSION["user"]["id"],
-                        "is_delete" => 0
-                    ]);
-                    header("Location: index.php");
+                    if (!$has_project) {
+                        insertData($link, "projects", [
+                            "project" => $name,
+                            "author_id" => $_SESSION["user"]["id"],
+                            "is_delete" => 0
+                        ]);
+                        header("Location: index.php");
+                    } else {
+                        $wrongs[] = "name";
+                    }
                 }
             }
             break;

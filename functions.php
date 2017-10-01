@@ -267,17 +267,25 @@ function execQuery($link, $sql, $data = []) {
 }
 
 /**
- * Метод, проверяющий существования проекта в массиве и возвращающий его id
- * @param $project string // выбранный/введенный проект
+ * Метод проверяющий выбранный проект
+ * @param $project int|string // id проекта, который вводит пользователь
  * @param $projects array // массив проектов
- * @return null|int // id проекта
+ * @param $param string // по какому полю проверять
+ * @return bool // правильность заполнения поля
  */
-function getProjectsId($project, $projects) {
-    $result = null;
+function validateProject($project, $projects, $param) {
+    $result = false;
 
-    foreach ($projects as $key => $value) {
-        if ($project === $value["project"]) {
-            $result = $value["id"];
+    if ($param && $project && $projects) {
+        if ($param === "id") {
+            $project = filter_var($project, FILTER_VALIDATE_INT);
+        }
+
+        foreach ($projects as $key => $value) {
+            if ($value[$param] === $project) {
+                $result = true;
+                break;
+            }
         }
     }
 
