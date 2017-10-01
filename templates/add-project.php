@@ -1,3 +1,10 @@
+<?php
+
+// имя задачи, отправленной на сервер
+$name = $_POST["name"] ?? "";
+
+?>
+
 <div class="modal">
     <button class="modal__close" type="button" name="button">Закрыть</button>
 

@@ -2,7 +2,6 @@
 
 var expandControls = document.querySelectorAll('.expand-control');
 var pathname = location.pathname;
-console.log(pathname);
 
 var hidePopups = function() {
   [].forEach.call(document.querySelectorAll('.expand-list'), function(item) {
@@ -54,6 +53,6 @@ if (completeTaskCheckbox) {
 var closeBtn = document.querySelector('.modal__close');
 if (closeBtn) {
     closeBtn.addEventListener('click', function () {
-        location.replace(pathname + '/');
+        location.replace(pathname);
     });
 }

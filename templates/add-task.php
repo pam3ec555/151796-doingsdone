@@ -36,11 +36,11 @@ $project = $_POST["project"] ?? "";
                     <?php if (in_array("project", $errors)): ?>form__input--error<?php endif; ?>"
                     name="project" id="project" required>
                 <?php foreach ($projects as $key => $value): ?>
-                    <option value="<?=$value["project"]?>"
+                    <option value="<?=$value["id"]?>"
                         <?php if ($project === $value["project"]): ?>
                             selected
                         <?php endif; ?>
-                        ><?=$value["project"]?></option>
+                        ><?=htmlspecialchars($value["project"])?></option>
                 <?php endforeach;?>
             </select>
             <?php if (in_array("project", $errors)): ?>

@@ -26,7 +26,7 @@ function setProjectsCount($tasks, $project_id) {
  * @param $data // массив данных, для текущего шаблона
  * @return string // готовый шаблон
  */
-function renderTemplate($template_url, $data = false) {
+function renderTemplate($template_url, $data = []) {
     // Проверка на существование url
     if (!file_exists($template_url)) {
         return "";
@@ -36,7 +36,7 @@ function renderTemplate($template_url, $data = false) {
     ob_start();
 
     // Проверка на существование данных
-    if ($data) {
+    if (count($data)) {
         // Импорт переменных из массива данных в текущую таблицу символов
         extract($data);
     }

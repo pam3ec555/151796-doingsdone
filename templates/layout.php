@@ -25,15 +25,15 @@
                   <nav class="main-navigation">
                     <ul class="main-navigation__list">
                         <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link <?php if ($project_inset === 0): ?>main-navigation__list-item--active<?php endif; ?>" href="<?="index.php?inset=" . 0; ?>">Все</a>
+                            <a class="main-navigation__list-item-link <?php if ($project_inset === -1): ?>main-navigation__list-item--active<?php endif; ?>" href="<?="index.php?inset=" . -1; ?>">Все</a>
                             <span class="main-navigation__list-item-count"><?php print(count($tasks)); ?></span>
                         </li>
-                        <?php for ($i = 1; $i <= count($projects); $i++): ?>
+                        <?php foreach ($projects as $key => $value): ?>
                           <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link <?php if ($i === $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?="index.php?inset=" . $i; ?>"><?=htmlspecialchars($projects[$i]["project"]); ?></a>
-                            <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $projects[$i]["id"])) ?></span>
+                            <a class="main-navigation__list-item-link <?php if ($key === $project_inset): ?>main-navigation__list-item--active<?php endif; ?>" href="<?="index.php?inset=" . $key; ?>"><?=htmlspecialchars($value["project"]); ?></a>
+                            <span class="main-navigation__list-item-count"><?php print(setProjectsCount($tasks, $value["id"])) ?></span>
                           </li>
-                        <?php endfor; ?>
+                        <?php endforeach ?>
                     </ul>
                   </nav>
                     <a class="button button--transparent button--plus content__side-button" href="?add_project">Добавить проект</a>

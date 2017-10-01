@@ -82,11 +82,12 @@ if (isset($_GET["task_complete"])) {
             $date_complete = "NOW()";
         }
 
-        $sql = "UPDATE tasks SET is_complete = !is_complete, date_complete = " . $date_complete . " WHERE id = " . $task_complete;
+        $sql = "UPDATE tasks SET is_complete = !is_complete, date_complete = " . $date_complete . " WHERE id = " . $task_complete
+                . " AND author_id = " . $_SESSION["user"]["id"];
 
-        execQuery($link, $sql);
-
-        header("Location: index.php");
+        if (execQuery($link, $sql)) {
+            header("Location: index.php");
+        }
     } else {
         pageNotFound();
     }
@@ -96,7 +97,8 @@ if (isset($_GET["task_delete"])) {
     $task_delete = filter_var($_GET["task_delete"], FILTER_VALIDATE_INT);
 
     if ($task_delete) {
-        $sql = "UPDATE tasks SET is_delete = 1 WHERE id = " . $task_delete;
+        $sql = "UPDATE tasks SET is_delete = 1 WHERE id = " . $task_delete . " AND author_id = " . $_SESSION["user"]["id"];
+        print_r($sql);
 
         execQuery($link, $sql);
 
@@ -111,7 +113,8 @@ if (isset($_GET["task_copy"])) {
 
     if ($task_copy) {
         // формируем запрос для получения выбранной задачи
-        $sql = "SELECT task, file_url, file_name, deadline, project_id FROM tasks WHERE id = " . $task_copy;
+        $sql = "SELECT task, file_url, file_name, deadline, project_id FROM tasks WHERE id = " . $task_copy
+                . " AND author_id = " . $_SESSION["user"]["id"];
 
         $cur_task = selectData($link, $sql);
         $cur_task = $cur_task[0];
@@ -167,18 +170,19 @@ if (isset($_SESSION["user"])) {
 }
 
 $project_id = 0;
+$project_inset = -1;
 
 // проверка на параметр запроса
 if (isset($_GET["inset"]) && $_SESSION["user"] && $projects) {
     // фильтрация параметра inset
     $project_inset = filter_var($_GET["inset"], FILTER_VALIDATE_INT, ["options" => [
-        "min_range" => 0,
-        "max_range" => count($projects)
+        "min_range" => -1,
+        "max_range" => count($projects) - 1
     ]]);
 
-    if ($project_inset) {
+    if (($project_inset && $project_inset >= 0) || $project_inset === 0) {
         $project_id = $projects[$project_inset]["id"];
-    } else {
+    } else if ($project_inset !== -1) {
         pageNotFound();
     }
 }
@@ -369,6 +373,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if (isset($_SESSION["user"])) {
                 $search = trim($_POST["search"]);
 
+                // идет проверка, что строка не пустая и не состоит из одних пробелов
                 if (!$errors) {
                     $tasks = selectData($link, "SELECT * FROM tasks WHERE author_id = "
                         . $_SESSION["user"]["id"]
