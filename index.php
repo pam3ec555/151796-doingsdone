@@ -16,6 +16,7 @@ if (isset($_GET["logout"])) {
 
 $show_complete_tasks = false;
 
+// проверка на показ выполненных заданий в куках
 if (isset($_COOKIE["show_complete_tasks"])) {
     $show_complete_tasks = $_COOKIE["show_complete_tasks"];
 }
