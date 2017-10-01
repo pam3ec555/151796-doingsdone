@@ -14,8 +14,6 @@ if (isset($_GET["logout"])) {
     header("Location: index.php");
 }
 
-$dir = "/151796-doingsdone";
-
 $show_complete_tasks = false;
 
 if (isset($_COOKIE["show_complete_tasks"])) {
@@ -98,7 +96,6 @@ if (isset($_GET["task_delete"])) {
 
     if ($task_delete) {
         $sql = "UPDATE tasks SET is_delete = 1 WHERE id = " . $task_delete . " AND author_id = " . $_SESSION["user"]["id"];
-        print_r($sql);
 
         execQuery($link, $sql);
 
@@ -272,7 +269,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (isset($_FILES["preview"])) {
             $file_name = $_FILES["preview"]["name"];
             $file_path = __DIR__ . "/uploads/";
-            $file_url =  $dir . "/uploads/" . $file_name;
+            $file_url =  "/uploads/" . $file_name;
             $file_tmp_name = $_FILES["preview"]["tmp_name"];
 
             move_uploaded_file($file_tmp_name, $file_path . $file_name);
@@ -313,7 +310,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         "is_delete" => 0
                     ]);
                 }
-//                header("Location: index.php");
+                header("Location: index.php");
             }
             break;
         case "Войти":
